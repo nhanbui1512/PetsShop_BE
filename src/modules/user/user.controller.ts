@@ -48,11 +48,11 @@ export const createUserModule = createModuleFactory({
                     required: false,
                 }),
             ],
-            // security: true,
+            security: true,
         })
         router.get(
             '/',
-            // identityGuard,
+            identityGuard,
             createHandler(async (req, res) => {
                 const users = await createUserService.getUsers(req.query);
                 return HttpResponseBuilder.buildOK(res, users);
@@ -72,11 +72,11 @@ export const createUserModule = createModuleFactory({
                     required: true,
                 }),
             ],
-            // security: true,
+            security: true,
         })
         router.get(
             '/:id',
-            // identityGuard,
+            identityGuard,
             createHandler(async (req, res) => {
                 logger.info(req.params.id);
                 const user = await createUserService.getById(req.params.id);
@@ -119,6 +119,30 @@ export const createUserModule = createModuleFactory({
             createHandler(async (req, res) => {
                 const user = await createUserService.updateUser(req.params.id, req.body);
                 return HttpResponseBuilder.buildOK(res, user);
+            }),
+        );
+        swaggerBuilder.addRoute({
+            description: 'Delete user by id',
+            route: '/users/{id}',
+            tags: [MODULE_NAME],
+            method: 'delete',
+            params: [
+                PropertyFactory.createParam({
+                    name: 'id',
+                    paramsIn: 'path',
+                    type: 'string',
+                    description: 'Object id of user',
+                    required: true,
+                }),
+            ],
+            security: true,
+        });
+        router.delete(
+            '/:id',
+            identityGuard,
+            createHandler(async (req, res) => {
+                await createUserService.deleteUser(req.params.id);
+                return HttpResponseBuilder.buildNoContent(res);
             }),
         );
     },

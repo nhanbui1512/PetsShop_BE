@@ -53,6 +53,13 @@ class UserService {
             throw error;
         }
     }
+    async deleteUser(id: string) {
+        try {
+            await UserModel.findByIdAndDelete(id);
+        } catch (error) {
+            throw error;
+        }
+    }
 }
 
 export const createUserService = new UserService(UserModel);
