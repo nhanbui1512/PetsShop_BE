@@ -3,12 +3,15 @@ import { PropertyFactory } from '../../system/swagger/core/property.factory';
 import { createModuleFactory } from '../../system/factories/module.factory';
 import { createHandler } from '../../system/factories';
 import { HttpResponseBuilder } from '../../system/builders/http-response.builder';
+
 import {
     registerDtoValidator,
     loginDtoValidator,
     authenticationService,
     userIdentityService,
+    identityGuard,
 } from './auth-service/service';
+import { logger } from '../../system/logging/logger';
 
 const MODULE_NAME = 'Auth';
 export const createAuthModule = createModuleFactory({
@@ -26,6 +29,13 @@ export const createAuthModule = createModuleFactory({
         });
         swaggerBuilder.addRoute({
             description: "Login to the system. Returns JWT token.",
+            //params search and sort pagination limit and offset
+            params: {
+                search: PropertyFactory.createProperty({ type: 'string' }),
+                sort: PropertyFactory.createProperty({ type: 'string' }),
+                page: PropertyFactory.createProperty({ type: 'number' }),
+                limit: PropertyFactory.createProperty({ type: 'number' }),
+            },
             route: '/auth/login',
             body: LOGIN_DTO_NAME,
             tags: [MODULE_NAME],
@@ -49,9 +59,10 @@ export const createAuthModule = createModuleFactory({
         swaggerBuilder.addModel({
             name: 'RegisterDto',
             properties: {
+                firstName: PropertyFactory.createProperty({ type: 'string' }),
+                lastName: PropertyFactory.createProperty({ type: 'string' }),
                 email: PropertyFactory.createProperty({ type: 'string' }),
-                password: PropertyFactory.createProperty({ type: 'string' }),
-                name: PropertyFactory.createProperty({ type: 'string' }),
+                password: PropertyFactory.createProperty({ type: 'string' })
             },
         });
         swaggerBuilder.addRoute({
@@ -65,7 +76,8 @@ export const createAuthModule = createModuleFactory({
             registerDtoValidator,
             createHandler(async (req, res) => {
                 const registerDto = {
-                    name: req.body.name,
+                    firstName: req.body.firstName,
+                    lastName: req.body.lastName,
                     email: req.body.email,
                     password: req.body.password,
                 };
@@ -84,8 +96,10 @@ export const createAuthModule = createModuleFactory({
         });
         router.get(
             '/me',
+            identityGuard,
             createHandler(async (req, res) => {
                 const userId = userIdentityService.getUserIdContext(req);
+                logger.info(typeof userId);
                 const user = await authenticationService.getMe(userId);
 
                 return HttpResponseBuilder.buildOK(res, user);

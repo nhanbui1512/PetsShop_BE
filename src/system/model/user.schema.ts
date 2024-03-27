@@ -1,6 +1,8 @@
-import { model, Model, Schema, Document } from 'mongoose';
-
-export interface IUser extends Document {
+import { model, Model, Schema, Document, Mongoose } from 'mongoose';
+import paginate from 'mongoose-paginate-v2';
+import { SoftDeleteDocument } from 'mongoose-delete';
+import MongooseDelete, { SoftDeleteModel } from 'mongoose-delete';
+export interface IUser extends Document,SoftDeleteDocument {
     _id: Object;
     email: string;
     password: string;
@@ -40,5 +42,7 @@ const IUserSchema = new Schema<IUser>(
     },
     { collection: 'user', timestamps: true },
 );
+IUserSchema.plugin(MongooseDelete, { deletedAt: true, overrideMethods: true });
+IUserSchema.plugin(paginate);
 
-export const UserModel: Model<IUser> = model<IUser>('user', IUserSchema);
+export const UserModel: SoftDeleteModel = model<IUser>('user', IUserSchema);
