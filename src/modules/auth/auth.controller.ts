@@ -25,6 +25,7 @@ export const createAuthModule = createModuleFactory({
             },
         });
         swaggerBuilder.addRoute({
+            description: "Login to the system. Returns JWT token.",
             route: '/auth/login',
             body: LOGIN_DTO_NAME,
             tags: [MODULE_NAME],

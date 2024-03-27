@@ -1,0 +1,33 @@
+import { model, Model, Schema, Document } from 'mongoose';
+import { IProduct } from './product.schema';
+
+export interface ICardBreed extends Document {
+    _id: Object;
+    breed_name: string;
+    appearance: string; // Appearance of the breed
+    behavior: string; // Behavior of the breed
+    common_health_issues: string; // Common health issues of the breed
+    diet: IProduct;
+    breedImages: string[]; // Images of the breed
+    description: string;
+    createdAt?: Date;
+    updatedAt?: Date;
+}
+
+export const CardBreedSchema = new Schema<ICardBreed>(
+    {
+        breed_name: { type: String, required: true },
+        appearance: { type: String, required: true },
+        behavior: { type: String, required: true },
+        common_health_issues: { type: String, required: true },
+        diet: { type: Schema.Types.ObjectId, ref: 'product' },
+        breedImages: [
+            {
+                type: String,
+            },
+        ],
+        description: { type: String, required: true },
+    },
+    { collection: 'cardBreed', timestamps: true },
+);  
+export const CardBreedModel: Model<ICardBreed> = model<ICardBreed>('cardBreed', CardBreedSchema);
