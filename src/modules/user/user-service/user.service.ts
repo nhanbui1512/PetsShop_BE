@@ -49,6 +49,7 @@ class UserService {
         try {
             const updatedUser = await UserModel.findByIdAndUpdate
             (id, user, { new: true });
+            return updatedUser;
         } catch (error) {
             throw error;
         }

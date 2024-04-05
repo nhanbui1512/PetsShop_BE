@@ -88,16 +88,16 @@ export const createUserModule = createModuleFactory({
         swaggerBuilder.addModel({
             name: 'UserUpdateDto',
             properties: {
-                firstName: PropertyFactory.createProperty({ type: 'string' }),
-                lastName: PropertyFactory.createProperty({ type: 'string' }),
-                email: PropertyFactory.createProperty({ type: 'string' }),
-                password: PropertyFactory.createProperty({ type: 'string' }),
-                profileImage: PropertyFactory.createProperty({ type: 'string' }),
+                firstName: PropertyFactory.createProperty({ type: 'string', required: false}),
+                lastName: PropertyFactory.createProperty({ type: 'string', required: false }),
+                email: PropertyFactory.createProperty({ type: 'string', required: false }),
+                password: PropertyFactory.createProperty({ type: 'string', required: false }),
+                profileImage: PropertyFactory.createProperty({ type: 'string', required: false }),
             },
         });
 
         swaggerBuilder.addRoute({
-            description: 'Update user by id',
+            description: "Update user by id",
             route: '/users/{id}',
             tags: [MODULE_NAME],
             method: 'patch',
@@ -110,13 +110,15 @@ export const createUserModule = createModuleFactory({
                     required: true,
                 }),
             ],
-            body: 'UserUpdateDto',
+            body: USER_UPDATE_DTO,
             security: true,
-        });
-        router.put(
+        })
+        router.patch(
             '/:id',
             identityGuard,
             createHandler(async (req, res) => {
+                console.log("vao day ne");
+                logger.info(req.params.id);
                 const user = await createUserService.updateUser(req.params.id, req.body);
                 return HttpResponseBuilder.buildOK(res, user);
             }),
