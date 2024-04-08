@@ -15,7 +15,6 @@ const ICategorySchema = new Schema<ICategory>(
             index: true,
         },
         description: { type: String, required: true },
-        slug: { type: String, required: true },
     },
     { collection: 'category', timestamps: true },
 );

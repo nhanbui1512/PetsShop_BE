@@ -1,21 +1,24 @@
 import { model, Model, Schema, Document } from 'mongoose';
-
-export interface IProduct extends Document {
+import { SoftDeleteDocument } from 'mongoose-delete';
+import paginate from 'mongoose-paginate-v2';
+import MongooseDelete, { SoftDeleteModel } from 'mongoose-delete';
+import { ICategory } from './category.schema';
+export interface IProduct extends Document,SoftDeleteDocument {
     _id: Object;
     productImage: string[];
     name: string;
     description: string;
     variantOptions: IVariantOptions[];
-    categoryID: string;
+    categoryID: ICategory['_id'];
     createdAt?: Date;
     updatedAt?: Date;
 }
 
-export interface IVariantOptions extends Document {
+export interface IVariantOptions extends Document,SoftDeleteDocument {
     _id: Object;
     name: string;
     value: string;
-    prince: number;
+    price: number;
     quantity: number;
     createdAt?: Date;
     updatedAt?: Date;
@@ -23,10 +26,10 @@ export interface IVariantOptions extends Document {
 
 export const VariantOptionsSchema = new Schema<IVariantOptions>(
     {
-        name: { type: String, required: true },
-        value: { type: String, required: true },
-        prince: { type: Number, required: true },
-        quantity: { type: Number, required: true },
+        name: { type: String, },
+        value: { type: String,  },
+        price: { type: Number, required: true },
+        quantity: { type: Number, },
     },
     { collection: 'variantOptions', timestamps: true },
 );
@@ -52,4 +55,6 @@ const IProductSchema = new Schema<IProduct>(
     },
     { collection: 'product', timestamps: true },
 );
-export const ProductModel: Model<IProduct> = model<IProduct>('product', IProductSchema);
+IProductSchema.plugin(MongooseDelete, { deletedAt: true, overrideMethods: true });
+IProductSchema.plugin(paginate);
+export const ProductModel: SoftDeleteModel = model<IProduct>('product', IProductSchema);

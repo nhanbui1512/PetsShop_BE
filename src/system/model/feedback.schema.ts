@@ -9,7 +9,7 @@ export interface IFeedback extends Document {
     createdAt?: Date;
     updatedAt?: Date;
 }
-
+// link image
 export const FeedbackSchema = new Schema<IFeedback>(
     {
         userId: { type: Schema.Types.ObjectId, ref: 'user' },

@@ -78,7 +78,7 @@ export const createUserModule = createModuleFactory({
             '/:id',
             identityGuard,
             createHandler(async (req, res) => {
-                logger.info(req.params.id);
+                // logger.info(req.params.id);
                 const user = await createUserService.getById(req.params.id);
                 return HttpResponseBuilder.buildOK(res, user);
             }),

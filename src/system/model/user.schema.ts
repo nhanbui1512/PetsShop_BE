@@ -2,6 +2,10 @@ import { model, Model, Schema, Document, Mongoose } from 'mongoose';
 import paginate from 'mongoose-paginate-v2';
 import { SoftDeleteDocument } from 'mongoose-delete';
 import MongooseDelete, { SoftDeleteModel } from 'mongoose-delete';
+export enum userRoleEnum {
+    USER = 'user',
+    ADMIN = 'admin',
+}
 
 export enum UserRoles {
     ADMIN = 'admin',
@@ -21,6 +25,7 @@ export interface IUser extends Document,SoftDeleteDocument {
     isActive?: boolean;
     createdAt?: Date;
     updatedAt?: Date;
+    role: userRoleEnum;
 }
 
 const IUserSchema = new Schema<IUser>(
@@ -44,6 +49,7 @@ const IUserSchema = new Schema<IUser>(
         profileImage: { type: String, default: 'https://www.shutterstock.com/image-vector/default-avatar-profile-icon-vector-260nw-1725655669.jpg' },
         refreshToken: { type: String },
         isActive: { type: Boolean, default: true },
+        role: { type: String, enum: Object.values(userRoleEnum), default: userRoleEnum.USER },
         expired: { type: Date },
         UserRoles: { type: String, enum: Object.values(UserRoles), default: UserRoles.USER },
     },
