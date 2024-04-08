@@ -5,7 +5,7 @@ import { createHandler } from '../../system/factories';
 import { HttpResponseBuilder } from '../../system/builders/http-response.builder';
 import { identityGuard } from '../auth/auth-service/service';
 import { logger } from '../../system/logging/logger';
-import { productCreateDtoValidator, createProductsService } from './product-service/'
+import { productCreateDtoValidator, createProductsService, productUpdateDtoValidator } from './product-service/'
 import {  } from '../../system/model';
 import { model } from 'mongoose';
 const MODULE_NAME = 'Product';
@@ -130,11 +130,21 @@ export const createProductModule = createModuleFactory({
                 return HttpResponseBuilder.buildOK(res, product);
             }),
         );
+        const updatedProduct = 'UpdateProduct';
+        swaggerBuilder.addModel({
+            name: 'UpdateProduct',
+            properties: {
+                name: PropertyFactory.createProperty({ type: 'string', description: 'Product name' }),
+                description: PropertyFactory.createProperty({ type: 'string', description: 'Product description' }),
+                categoryID: PropertyFactory.createProperty({ type: 'string', description: 'Category id' }),
+                productImage: PropertyFactory.createProperty({ type: 'array', items: { type: 'string' }, description: 'Product image' }),
+            },
+        });
         swaggerBuilder.addRoute({
             description: "Update product by id",
             route: '/products/:id',
             tags: [MODULE_NAME],
-            method: 'put',
+            method: 'patch',
             params: [
                 PropertyFactory.createParam({
                     name: 'id',
@@ -142,18 +152,13 @@ export const createProductModule = createModuleFactory({
                     type: 'string',
                     description: 'Product id',
                     required: true,
-                }),
-                PropertyFactory.createParam({
-                    name: 'product',
-                    paramsIn: 'body',
-                    type: 'object',
-                    description: 'Product object',
-                    required: true,
-                }),
+                })
             ],
+            body: updatedProduct,
         })
-        router.put(
+        router.patch(
             '/:id',
+            productUpdateDtoValidator,
             createHandler(async (req, res) => {
                 const product = await createProductsService.updateProduct(req.params.id, req.body);
                 return HttpResponseBuilder.buildOK(res, product);
@@ -179,6 +184,36 @@ export const createProductModule = createModuleFactory({
             createHandler(async (req, res) => {
                 await createProductsService.deleteProduct(req.params.id);
                 return HttpResponseBuilder.buildOK(res, {});
+            }),
+        );
+        // update variant options
+        swaggerBuilder.addModel({
+            name: 'UpdateVariantOptions',
+            properties: {
+                variantOptions: PropertyFactory.createProperty({ type: 'array', model: 'VariantOptions', description: 'Variant options' }),
+            },
+        });
+        swaggerBuilder.addRoute({
+            description: "Update variant options by id",
+            route: '/products/{id}/variant-options',
+            tags: [MODULE_NAME],
+            method: 'patch',
+            params: [
+                PropertyFactory.createParam({
+                    name: 'id',
+                    paramsIn: 'path',
+                    type: 'string',
+                    description: 'Product id',
+                    required: true,
+                }),
+            ],
+            body: 'UpdateVariantOptions',
+        })
+        router.patch(
+            '/:id/variant-options',
+            createHandler(async (req, res) => {
+                const product = await createProductsService.updateVariantOptions(req.params.id, req.body.variantOptions);
+                return HttpResponseBuilder.buildOK(res, product);
             }),
         );
     }

@@ -20,37 +20,6 @@ export const createCategoryModule = createModuleFactory({
             route: '/categories',
             tags: [MODULE_NAME],
             method: 'get',
-            // params: [
-            //     PropertyFactory.createParam({
-            //         name: 'limit',
-            //         paramsIn: 'query',
-            //         type: 'number?',
-            //         description: 'Number of items per page (limit)',
-            //         required: false,
-            //     }),
-            //     PropertyFactory.createParam({
-            //         name: 'page',
-            //         paramsIn: 'query',
-            //         type: 'number?',
-            //         description: 'Page number',
-            //         required: false,
-            //     }),
-            //     PropertyFactory.createParam({
-            //         name: 'search',
-            //         paramsIn: 'query',
-            //         type: 'string?',
-            //         description: 'Search query',
-            //         required: false,
-            //     }),
-            //     PropertyFactory.createParam({
-            //         name: 'sort',
-            //         paramsIn: 'query',
-            //         type: 'string?',
-            //         description: 'Sort query',
-            //         required: false,
-            //     }),
-            // ],
-            // security: true,
         })
         router.get(
             '/',
@@ -84,6 +53,43 @@ export const createCategoryModule = createModuleFactory({
                 }
                 const category: ICategory = await categoryService.createCategory(createCategoryDTO);
                 return HttpResponseBuilder.buildCreated(res, category);
+            }),
+        );
+        //get products by Id
+        swaggerBuilder.addRoute({
+            description: "Get products by category",
+            route: '/categories/{id}',
+            tags: [MODULE_NAME],
+            method: 'get',
+            params: [
+                PropertyFactory.createParam({
+                    name: 'id',
+                    paramsIn: 'path',
+                    type: 'string',
+                    description: 'Category id',
+                    required: true,
+                }),
+                PropertyFactory.createParam({
+                    name: 'limit',
+                    paramsIn: 'query',
+                    type: 'number?',
+                    description: 'Number of items per page (limit)',
+                    required: false,
+                }),
+                PropertyFactory.createParam({
+                    name: 'page',
+                    paramsIn: 'query',
+                    type: 'number?',
+                    description: 'Page number',
+                    required: false,
+                }),
+            ],
+        })
+        router.get(
+            '/:id',
+            createHandler(async (req, res) => {
+                const category = await categoryService.getCategoryById(req.params.id, req.query.page, req.query.limit);
+                return HttpResponseBuilder.buildOK(res, category);
             }),
         );
     }

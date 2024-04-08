@@ -1,5 +1,9 @@
-import { model, Model, Schema, Document } from 'mongoose';
-export interface IBlog extends Document {
+import { model, Model, Schema, Document, Mongoose } from 'mongoose';
+import paginate from 'mongoose-paginate-v2';
+import { SoftDeleteDocument } from 'mongoose-delete';
+import MongooseDelete, { SoftDeleteModel } from 'mongoose-delete';
+
+export interface IBlog extends Document,SoftDeleteDocument {
     _id: Object;
     title: string;
     content: string;
@@ -8,7 +12,7 @@ export interface IBlog extends Document {
     updatedAt?: Date;
 }
 
-export const BlogSchema = new Schema<IBlog>(
+const BlogSchema = new Schema<IBlog>(
     {
         title: { type: String, required: true },
         content: { type: String, required: true },
@@ -16,3 +20,10 @@ export const BlogSchema = new Schema<IBlog>(
     },
     { collection: 'blog', timestamps: true },
 );
+
+BlogSchema.plugin(MongooseDelete, { deletedAt: true, overrideMethods: true });
+BlogSchema.plugin(paginate);
+// index title to search
+BlogSchema.index({ title: 'text' });
+
+export const BlogModel:SoftDeleteModel = model<IBlog>('blog', BlogSchema);

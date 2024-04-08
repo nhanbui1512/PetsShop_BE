@@ -3,6 +3,7 @@ import { createAuthModule } from './auth';
 import { createUserModule } from './user';
 import { createCategoryModule } from './category';
 import { createProductModule } from './product';
+import { createBlogModule } from './blog';
 export const createRootModule = createModuleFactory({
     path: '/api',
     name: 'Root',
@@ -11,5 +12,6 @@ export const createRootModule = createModuleFactory({
         createUserModule(router);
         createCategoryModule(router);
         createProductModule(router);
+        createBlogModule(router);
     },
 });

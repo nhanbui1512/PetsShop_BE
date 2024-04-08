@@ -10,3 +10,11 @@ export const productCreateDtoValidator = createInboundValidatorByJoi(
         productImage: Joi.array().items(Joi.string()), // Assuming productImage is an array of strings
     })
 );
+export const productUpdateDtoValidator = createInboundValidatorByJoi(
+    Joi.object({
+        name: Joi.string().required(),
+        description: Joi.string().required(),
+        categoryID: Joi.string().required(), // Assuming categoryID is a string
+        productImage: Joi.array().items(Joi.string()), // Assuming productImage is an array of strings
+    })
+)

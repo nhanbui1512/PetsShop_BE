@@ -57,4 +57,5 @@ const IProductSchema = new Schema<IProduct>(
 );
 IProductSchema.plugin(MongooseDelete, { deletedAt: true, overrideMethods: true });
 IProductSchema.plugin(paginate);
+IProductSchema.index({ name: 'text', description: 'text' });
 export const ProductModel: SoftDeleteModel = model<IProduct>('product', IProductSchema);
