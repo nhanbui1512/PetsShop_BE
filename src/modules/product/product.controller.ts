@@ -81,6 +81,7 @@ export const createProductModule = createModuleFactory({
                 name: PropertyFactory.createProperty({ type: 'string', description: 'Product name' }),
                 description: PropertyFactory.createProperty({ type: 'string', description: 'Product description' }),
                 categoryID: PropertyFactory.createProperty({ type: 'string', description: 'Category id' }),
+                htmlDomDescription: PropertyFactory.createProperty({ type: 'string', description: 'HTML description' }),
                 variantOptions: PropertyFactory.createProperty({ type: 'array', model: 'VariantOptions', description: 'Variant options' }),
                 productImage: PropertyFactory.createProperty({ type: 'array', items: { type: 'string' }, description: 'Product image' }),
             },
@@ -135,6 +136,7 @@ export const createProductModule = createModuleFactory({
                 name: PropertyFactory.createProperty({ type: 'string', description: 'Product name' }),
                 description: PropertyFactory.createProperty({ type: 'string', description: 'Product description' }),
                 categoryID: PropertyFactory.createProperty({ type: 'string', description: 'Category id' }),
+                htmlDomDescription: PropertyFactory.createProperty({ type: 'string', description: 'HTML description' }),
                 productImage: PropertyFactory.createProperty({ type: 'array', items: { type: 'string' }, description: 'Product image' }),
             },
         });

@@ -10,6 +10,7 @@ export interface IProduct extends Document,SoftDeleteDocument {
     description: string;
     variantOptions: IVariantOptions[];
     categoryID: ICategory['_id'];
+    htmlDomDescription: string;
     createdAt?: Date;
     updatedAt?: Date;
 }
@@ -52,6 +53,7 @@ const IProductSchema = new Schema<IProduct>(
                 ref: 'variantOptions',
             },
         ],
+        htmlDomDescription: { type: String },
     },
     { collection: 'product', timestamps: true },
 );
