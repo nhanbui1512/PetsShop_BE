@@ -70,8 +70,8 @@ export const createProductModule = createModuleFactory({
             properties: {
                 name: PropertyFactory.createProperty({ type: 'string', description: 'Variant option name' }),
                 value: PropertyFactory.createProperty({ type: 'string', description: 'Variant option value' }),
-                price: PropertyFactory.createProperty({ type: 'number', description: 'Variant option price' }),
-                quantity: PropertyFactory.createProperty({ type: 'number', description: 'Variant option quantity' }),
+                price: PropertyFactory.createProperty({ type: 'Number', description: 'Variant option price' }),
+                quantity: PropertyFactory.createProperty({ type: 'Number', description: 'Variant option quantity' }),
             },
         });
         
@@ -98,8 +98,6 @@ export const createProductModule = createModuleFactory({
             '/',
             productCreateDtoValidator,
             createHandler(async (req, res) => {
-                // logger.info('Create product');
-                // console.log(req.body);
                 const product = await createProductsService.createProduct(req.body);
                 return HttpResponseBuilder.buildOK(res, product);
             }),

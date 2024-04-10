@@ -1,6 +1,7 @@
 import PaginationService from '../../../system/service/pagination.service';
 import { IUser, UserModel,IProduct,ProductModel, VariantOptionsModel, IVariantOptions } from '../../../system/model';
-// import { logger } from 'system/logging/logger';
+import { logger } from '../../../system/logging/logger';
+import { stringify } from 'querystring';
 class ProductService {
     private paginationService: PaginationService<IProduct>;
 
@@ -14,12 +15,14 @@ class ProductService {
             if (productQuery.search) {
                 query.$text = { $search: productQuery.search };
             }
-
+    
             let sortOptions: any = {};
             if (productQuery.sort) {
                 sortOptions = productQuery.sort;
+            } else {
+                sortOptions = { createdAt: -1 };
             }
-
+    
             const options = {
                 page: productQuery.page || 1,
                 limit: productQuery.limit || 10,
@@ -29,13 +32,16 @@ class ProductService {
                     { path: 'categoryID', select: 'name' }
                 ]
             };
+    
+            // logger.info('query' + JSON.stringify(query) + 'options' + JSON.stringify(options));
             const paginatedResult = await this.paginationService.paginate(query, options);
-
+    
             return paginatedResult;
         } catch (error) {
             throw error;
         }
     }
+    
     async getById(id: string) {
         try {
             const product = await ProductModel.findById(id).lean().populate({ path: 'variantOptions', select: 'name value price' });

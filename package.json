@@ -13,7 +13,8 @@
         "start:prod": "npm run build && node ./dist/src/server.js",
         "build": "npx tsc",
         "seed:admin": "ts-node ./src/system/database/seed/seed.admin.ts",
-        "seed:products": "ts-node ./src/system/database/seed/seed.products.ts"
+        "seed:products": "ts-node ./src/system/database/seed/seed.products.ts",
+        "seed:price": "ts-node ./src/system/database/seed/seed.price.ts"
     },
     "repository": "https://github.com/linhprovip2002/express-boilerplate",
     "author": "linhprovip2002",
