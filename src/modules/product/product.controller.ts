@@ -142,7 +142,7 @@ export const createProductModule = createModuleFactory({
         });
         swaggerBuilder.addRoute({
             description: "Update product by id",
-            route: '/products/:id',
+            route: '/products/{id}',
             tags: [MODULE_NAME],
             method: 'patch',
             params: [

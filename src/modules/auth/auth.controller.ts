@@ -99,7 +99,6 @@ export const createAuthModule = createModuleFactory({
             identityGuard,
             createHandler(async (req, res) => {
                 const userId = userIdentityService.getUserIdContext(req);
-                logger.info(typeof userId);
                 const user = await authenticationService.getMe(userId);
 
                 return HttpResponseBuilder.buildOK(res, user);

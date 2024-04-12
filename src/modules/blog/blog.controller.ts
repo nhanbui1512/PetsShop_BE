@@ -106,9 +106,7 @@ export const createBlogModule = createModuleFactory({
         router.get(
             '/:id',
             createHandler(async (req, res) => {
-                logger.info('id'+ req.params.id);
                 const blog = await CreateBlogService.getById(req.params.id);
-                logger.info('blog'+ blog);
                 return HttpResponseBuilder.buildOK(res, blog);
             }),
         );

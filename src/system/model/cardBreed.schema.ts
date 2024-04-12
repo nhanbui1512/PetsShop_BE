@@ -1,6 +1,8 @@
 import { model, Model, Schema, Document } from 'mongoose';
 import { IProduct } from './product.schema';
-
+import paginate from 'mongoose-paginate-v2';
+import { SoftDeleteDocument } from 'mongoose-delete';
+import MongooseDelete, { SoftDeleteModel } from 'mongoose-delete';
 export interface ICardBreed extends Document {
     _id: Object;
     breed_name: string;
@@ -20,7 +22,7 @@ export const CardBreedSchema = new Schema<ICardBreed>(
         appearance: { type: String, required: true },
         behavior: { type: String, required: true },
         common_health_issues: { type: String, required: true },
-        diet: { type: Schema.Types.ObjectId, ref: 'product' },
+        diet: [{ type: Schema.Types.ObjectId, ref: 'product' }],
         breedImages: [
             {
                 type: String,
@@ -30,4 +32,8 @@ export const CardBreedSchema = new Schema<ICardBreed>(
     },
     { collection: 'cardBreed', timestamps: true },
 );  
-export const CardBreedModel: Model<ICardBreed> = model<ICardBreed>('cardBreed', CardBreedSchema);
+CardBreedSchema.plugin(MongooseDelete, { deletedAt: true, overrideMethods: true });
+CardBreedSchema.plugin(paginate);
+
+
+export const CardBreedModel: SoftDeleteModel = model<ICardBreed>('cardBreed', CardBreedSchema);
