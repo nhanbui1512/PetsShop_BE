@@ -29,7 +29,7 @@ class AuthenticationService {
             throw new IncorrectLoginException();
         }
 
-        return this.userIdentityService.sign(user._id);
+        return this.userIdentityService.sign(user);
     }
 
     async register({ firstName, lastName , email, password }) {

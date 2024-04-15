@@ -71,8 +71,7 @@ class BreedService {
     }
     async createBreed(breed: ICardBreed) {
         try {
-            const newBreed = new CardBreedModel(breed);
-            await newBreed.save();
+            const newBreed = await CardBreedModel.create(breed);
             return newBreed;
         } catch (error) {
             throw error;

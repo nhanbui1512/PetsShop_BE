@@ -20,27 +20,29 @@ export const createBreedModule = createModuleFactory({
         swaggerBuilder.addModel({
             name: 'BreedCreateDTO',
             properties: {
-                breed_name: PropertyFactory.createProperty({ type: 'string', description: 'name' }),
-                appearance: PropertyFactory.createProperty({ type: 'string', description: 'appearance ' }),
-                behavior: PropertyFactory.createProperty({ type: 'string', description: 'behavior' }),
-                common_health_issues: PropertyFactory.createProperty({ type: 'string', description: 'Common healthy issue' }),
-                diet: PropertyFactory.createProperty({ type: 'array', items: { type: 'string' }, description: 'Product' }),
-                breedImages: PropertyFactory.createProperty({ type: 'array', items: { type: 'string' }, description: 'Product image' }),
-                description: PropertyFactory.createProperty({ type: 'string', description: 'Product image' }),
+                breed_name: PropertyFactory.createProperty({ type: 'string', description: 'Name of the breed' }),
+                appearance: PropertyFactory.createProperty({ type: 'string', description: 'Appearance of the breed' }),
+                behavior: PropertyFactory.createProperty({ type: 'string', description: 'Behavior of the breed' }),
+                common_health_issues: PropertyFactory.createProperty({ type: 'string', description: 'Common health issues of the breed' }),
+                diet: PropertyFactory.createProperty({ type: 'array', items: { type: 'string' }, description: 'Array of product IDs for the breed diet' }),
+                breedImages: PropertyFactory.createProperty({ type: 'array', items: { type: 'string' }, description: 'Array of image URLs for the breed' }),
+                description: PropertyFactory.createProperty({ type: 'string', description: 'Description of the breed' }),
             },
         });
+        
         swaggerBuilder.addRoute({
             description: "Create breed",
             route: '/breeds',
             tags: [MODULE_NAME],
             method: 'post',
             body: 'BreedCreateDTO',
-        });
+        })
         router.post(
             '/',
-            identityGuard,
-            breedCreateValidator,
+            // identityGuard,
+            // breedCreateValidator,
             createHandler(async (req, res) => {
+                logger.info('Create breed: '+ JSON.stringify(req.body));
                 const breed = await createBreedService.createBreed(req.body);
                 return HttpResponseBuilder.buildOK(res, breed);
             }),

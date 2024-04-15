@@ -19,6 +19,7 @@ export const createBlogModule = createModuleFactory({
                 title: PropertyFactory.createProperty({ type: 'string' }),
                 content: PropertyFactory.createProperty({ type: 'string' }),
                 category: PropertyFactory.createProperty({ type: 'string' }),
+                shortContent: PropertyFactory.createProperty({ type: 'string' }),
             },
         });
         swaggerBuilder.addRoute({
