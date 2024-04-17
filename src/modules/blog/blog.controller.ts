@@ -37,7 +37,8 @@ export const createBlogModule = createModuleFactory({
                 const createBlogDTO = {
                     title: req.body.title,
                     content: req.body.content,
-                    category: req.body.category,
+                    category: '66138671b74b79685c342a21',
+                    shortContent: req.body.shortContent,
                 }
                 const blog = await CreateBlogService.createBlog(createBlogDTO);
                 return HttpResponseBuilder.buildCreated(res, blog);
