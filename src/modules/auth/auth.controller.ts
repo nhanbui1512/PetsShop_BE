@@ -3,7 +3,6 @@ import { PropertyFactory } from '../../system/swagger/core/property.factory';
 import { createModuleFactory } from '../../system/factories/module.factory';
 import { createHandler } from '../../system/factories';
 import { HttpResponseBuilder } from '../../system/builders/http-response.builder';
-
 import {
     registerDtoValidator,
     loginDtoValidator,
@@ -102,6 +101,29 @@ export const createAuthModule = createModuleFactory({
                 const user = await authenticationService.getMe(userId);
 
                 return HttpResponseBuilder.buildOK(res, user);
+            }),
+        );
+        const FORGOT_PASSWORD_DTO_NAME = 'ForgotPasswordDto';
+        swaggerBuilder.addModel({
+            name: 'ForgotPasswordDto',
+            properties: {
+                email: PropertyFactory.createProperty({ type: 'string' }),
+            },
+        });
+
+        swaggerBuilder.addRoute({
+            route: '/auth/forgot-password',
+            tags: [MODULE_NAME],
+            method: 'post',
+            body: FORGOT_PASSWORD_DTO_NAME,
+        }),
+
+        router.post(
+            '/forgot-password',
+            createHandler(async (req, res) => {
+                logger.debug('Forgot password'+ req.body);
+                await authenticationService.forgotPassword(req.body.email);
+                return HttpResponseBuilder.buildOK(res, '');
             }),
         );
     },

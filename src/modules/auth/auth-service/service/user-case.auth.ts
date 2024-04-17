@@ -5,13 +5,16 @@ import {
 } from '../exceptions';
 import { hashService, userIdentityService } from '.';
 import { UserModel } from '../../../../system/model/index';
+import { mailService } from '../../../../system/service/mail.service';
 
 class AuthenticationService {
     private readonly userIdentityService = userIdentityService;
     private readonly hashService = hashService;
+    private readonly mailService = mailService;
     constructor() {
         this.userIdentityService = userIdentityService;
         this.hashService = hashService;
+        this.mailService = mailService;
     }
 
     async login(loginDto) {
@@ -49,13 +52,26 @@ class AuthenticationService {
             isActive: true,
         });
 
-        return this.userIdentityService.sign(newUser._id);
+        return this.userIdentityService.sign(newUser);
     }
 
     async getMe(userId) {
         const user = await UserModel.findById(userId).lean();
 
         return omit(user, 'password');
+    }
+
+    async forgotPassword(email) {
+        const user = await UserModel.findOne({ email: email }).lean();
+        if (!user) {
+            throw new Error('User not found');
+        }
+        mailService.sendMail(
+            email,
+            'Forget password',
+            'Reset password',
+            'Reset password',
+        );
     }
 }
 

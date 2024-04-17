@@ -14,7 +14,8 @@
         "build": "npx tsc",
         "seed:admin": "ts-node ./src/system/database/seed/seed.admin.ts",
         "seed:products": "ts-node ./src/system/database/seed/seed.products.ts",
-        "seed:price": "ts-node ./src/system/database/seed/seed.price.ts"
+        "seed:price": "ts-node ./src/system/database/seed/seed.price.ts",
+        "seed:quantity": "ts-node ./src/system/database/seed/seed.quantity.ts"
     },
     "repository": "https://github.com/linhprovip2002/express-boilerplate",
     "author": "linhprovip2002",
@@ -46,6 +47,7 @@
         "mongoose-delete": "^1.0.2",
         "mongoose-paginate-v2": "^1.8.0",
         "mongoose-slug-plugin": "^2.1.0",
+        "nodemailer": "^6.9.13",
         "nodemon": "^3.0.2",
         "prettier": "3.1.0",
         "swagger-ui-express": "^5.0.0",

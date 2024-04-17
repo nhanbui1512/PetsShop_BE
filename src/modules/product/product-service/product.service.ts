@@ -28,7 +28,7 @@ class ProductService {
                 limit: productQuery.limit || 10,
                 sort: sortOptions,
                 populate: [
-                    { path: 'variantOptions', select: 'name value price' },
+                    { path: 'variantOptions', select: 'name value price quantity' },
                     { path: 'categoryID', select: 'name' }
                 ]
             };
@@ -44,7 +44,7 @@ class ProductService {
     
     async getById(id: string) {
         try {
-            const product = await ProductModel.findById(id).lean().populate({ path: 'variantOptions', select: 'name value price' });
+            const product = await ProductModel.findById(id).lean().populate({ path: 'variantOptions', select: 'name value price quantity' });
 
             return product;
         } catch (error) {
@@ -97,7 +97,7 @@ class ProductService {
                 page: page || 1,
                 limit: limit || 10,
                 populate: [
-                    { path: 'variantOptions', select: 'name value price' },
+                    { path: 'variantOptions', select: 'name value price quantity' },
                     { path: 'categoryID', select: 'name' }
                 ]
             };

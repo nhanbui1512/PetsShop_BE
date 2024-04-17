@@ -29,7 +29,7 @@ class BreedService {
                 sort: sortOptions,
                 populate: [
                     { path: 'diet', select: '_id name description variantOptions',
-                        populate: { path: 'variantOptions', select: 'name value price' }
+                        populate: { path: 'variantOptions', select: 'name value price quantity' }
                      },
                 ]
             };
@@ -46,7 +46,7 @@ class BreedService {
         try {
             const breed = await CardBreedModel.findById(id).lean().
             populate({ path: 'diet', select: '_id name description variantOptions',
-                populate: { path: 'variantOptions', select: 'name value price' }
+                populate: { path: 'variantOptions', select: 'name value price quantity' }
              });
             }  
         catch (error) {
