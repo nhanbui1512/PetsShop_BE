@@ -12,6 +12,7 @@ export interface IBlog extends Document,SoftDeleteDocument {
     shortContent : string;
     ate;
     updatedAt?: Date;
+    thumbnail: { type: String,  },
 }
 
 const BlogSchema = new Schema<IBlog>(
@@ -20,6 +21,7 @@ const BlogSchema = new Schema<IBlog>(
         content: { type: String,  },
         category: { type: Schema.Types.ObjectId, ref: 'category' },
         shortContent : { type: String,  },
+        thumbnail: { type: String,  },
     },
     { collection: 'blog', timestamps: true },
 );
@@ -29,8 +31,11 @@ BlogSchema.plugin(paginate);
 // index title to search
 BlogSchema.index({ title: 'text' });
 //virtual format day
-BlogSchema.virtual('day').get(function (this: any) {
-    return this.createdAt.getDate();
+BlogSchema.virtual('createDate').get(function (this: any) {
+    return `${this.createdAt.getDate()} + '/' + ${this.createdAt.getMonth()} + '/' + ${this.createdAt.getFullYear()} - ${this.createdAt.getHours()} + ':' + ${this.createdAt.getMinutes()} + ':' + ${this.createdAt.getSeconds()}`;
+});
+BlogSchema.virtual('updateDate').get(function (this: any) {
+    return `${this.updatedAt.getDate()} + '/' + ${this.updatedAt.getMonth()} + '/' + ${this.updatedAt.getFullYear()} - ${this.updatedAt.getHours()} + ':' + ${this.updatedAt.getMinutes()} + ':' + ${this.updatedAt.getSeconds()}`;
 });
 
 export const BlogModel:SoftDeleteModel = model<IBlog>('blog', BlogSchema);

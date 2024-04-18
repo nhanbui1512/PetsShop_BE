@@ -20,6 +20,7 @@ export const createBlogModule = createModuleFactory({
                 content: PropertyFactory.createProperty({ type: 'string' }),
                 category: PropertyFactory.createProperty({ type: 'string' }),
                 shortContent: PropertyFactory.createProperty({ type: 'string' }),
+                thumbnail: PropertyFactory.createProperty({ type: 'string' }),
             },
         });
         swaggerBuilder.addRoute({
@@ -39,6 +40,7 @@ export const createBlogModule = createModuleFactory({
                     content: req.body.content,
                     category: '66138671b74b79685c342a21',
                     shortContent: req.body.shortContent,
+                    thumbnail: req.body.thumbnail? req.body.thumbnail : 'https://via.placeholder.com/150',
                 }
                 const blog = await CreateBlogService.createBlog(createBlogDTO);
                 return HttpResponseBuilder.buildCreated(res, blog);
