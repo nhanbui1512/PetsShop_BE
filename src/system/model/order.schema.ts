@@ -43,7 +43,6 @@ export const OrderItemSchema = new Schema<IOrderItem>(
     { collection: 'orderItem', timestamps: true },
 );
 
-
 export const OrderSchema = new Schema<IOrder>(
     {
         userId: { type: Schema.Types.ObjectId, ref: 'user' },
@@ -54,10 +53,17 @@ export const OrderSchema = new Schema<IOrder>(
             },
         ],
         total: { type: Number, required: true },
-        status: { type: String, enum: Object.values(OrderStatus), default: OrderStatus.PENDING },
+        status: {
+            type: String,
+            enum: Object.values(OrderStatus),
+            default: OrderStatus.PENDING,
+        },
     },
     { collection: 'order', timestamps: true },
 );
 
 export const OrderModel: Model<IOrder> = model<IOrder>('order', OrderSchema);
-export const OrderItemModel: Model<IOrderItem> = model<IOrderItem>('orderItem', OrderItemSchema);
+export const OrderItemModel: Model<IOrderItem> = model<IOrderItem>(
+    'orderItem',
+    OrderItemSchema,
+);

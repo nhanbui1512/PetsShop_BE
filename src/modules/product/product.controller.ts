@@ -5,8 +5,12 @@ import { createHandler } from '../../system/factories';
 import { HttpResponseBuilder } from '../../system/builders/http-response.builder';
 import { identityGuard } from '../auth/auth-service/service';
 import { logger } from '../../system/logging/logger';
-import { productCreateDtoValidator, createProductsService, productUpdateDtoValidator } from './product-service/'
-import {  } from '../../system/model';
+import {
+    productCreateDtoValidator,
+    createProductsService,
+    productUpdateDtoValidator,
+} from './product-service/';
+import {} from '../../system/model';
 import { model } from 'mongoose';
 const MODULE_NAME = 'Product';
 
@@ -17,8 +21,8 @@ export const createProductModule = createModuleFactory({
         swaggerBuilder.addTag(MODULE_NAME);
 
         swaggerBuilder.addRoute({
-            description: "Get all products",
-            route: '/products', 
+            description: 'Get all products',
+            route: '/products',
             tags: [MODULE_NAME],
             method: 'get',
             params: [
@@ -52,11 +56,13 @@ export const createProductModule = createModuleFactory({
                 }),
             ],
             // security: true,
-        })
+        });
         router.get(
             '/',
             createHandler(async (req, res) => {
-                const categories = await createProductsService.getProducts(req.query);
+                const categories = await createProductsService.getProducts(
+                    req.query,
+                );
                 return HttpResponseBuilder.buildOK(res, categories);
             }),
         );
@@ -68,26 +74,57 @@ export const createProductModule = createModuleFactory({
         swaggerBuilder.addModel({
             name: 'VariantOptions',
             properties: {
-                name: PropertyFactory.createProperty({ type: 'string', description: 'Variant option name' }),
-                value: PropertyFactory.createProperty({ type: 'string', description: 'Variant option value' }),
-                price: PropertyFactory.createProperty({ type: 'Number', description: 'Variant option price' }),
-                quantity: PropertyFactory.createProperty({ type: 'Number', description: 'Variant option quantity' }),
+                name: PropertyFactory.createProperty({
+                    type: 'string',
+                    description: 'Variant option name',
+                }),
+                value: PropertyFactory.createProperty({
+                    type: 'string',
+                    description: 'Variant option value',
+                }),
+                price: PropertyFactory.createProperty({
+                    type: 'Number',
+                    description: 'Variant option price',
+                }),
+                quantity: PropertyFactory.createProperty({
+                    type: 'Number',
+                    description: 'Variant option quantity',
+                }),
             },
         });
-        
+
         swaggerBuilder.addModel({
             name: 'ProductCreateDto',
             properties: {
-                name: PropertyFactory.createProperty({ type: 'string', description: 'Product name' }),
-                description: PropertyFactory.createProperty({ type: 'string', description: 'Product description' }),
-                categoryID: PropertyFactory.createProperty({ type: 'string', description: 'Category id' }),
-                htmlDomDescription: PropertyFactory.createProperty({ type: 'string', description: 'HTML description' }),
-                variantOptions: PropertyFactory.createProperty({ type: 'array', model: 'VariantOptions', description: 'Variant options' }),
-                productImage: PropertyFactory.createProperty({ type: 'array', items: { type: 'string' }, description: 'Product image' }),
+                name: PropertyFactory.createProperty({
+                    type: 'string',
+                    description: 'Product name',
+                }),
+                description: PropertyFactory.createProperty({
+                    type: 'string',
+                    description: 'Product description',
+                }),
+                categoryID: PropertyFactory.createProperty({
+                    type: 'string',
+                    description: 'Category id',
+                }),
+                htmlDomDescription: PropertyFactory.createProperty({
+                    type: 'string',
+                    description: 'HTML description',
+                }),
+                variantOptions: PropertyFactory.createProperty({
+                    type: 'array',
+                    model: 'VariantOptions',
+                    description: 'Variant options',
+                }),
+                productImage: PropertyFactory.createProperty({
+                    type: 'array',
+                    items: { type: 'string' },
+                    description: 'Product image',
+                }),
             },
         });
-        
-        
+
         swaggerBuilder.addRoute({
             description: 'Create product',
             route: '/products',
@@ -99,14 +136,15 @@ export const createProductModule = createModuleFactory({
             '/',
             productCreateDtoValidator,
             createHandler(async (req, res) => {
-                const product = await createProductsService.createProduct(req.body);
+                const product = await createProductsService.createProduct(
+                    req.body,
+                );
                 return HttpResponseBuilder.buildOK(res, product);
             }),
         );
-        
 
         swaggerBuilder.addRoute({
-            description: "Get product by id",
+            description: 'Get product by id',
             route: '/products/{id}',
             tags: [MODULE_NAME],
             method: 'get',
@@ -119,13 +157,15 @@ export const createProductModule = createModuleFactory({
                     required: true,
                 }),
             ],
-        })
+        });
         router.get(
             '/:id',
             createHandler(async (req, res) => {
                 // logger.info('Get product by id');
                 // logger.info(req.params.id);
-                const product = await createProductsService.getById(req.params.id);
+                const product = await createProductsService.getById(
+                    req.params.id,
+                );
                 return HttpResponseBuilder.buildOK(res, product);
             }),
         );
@@ -133,15 +173,31 @@ export const createProductModule = createModuleFactory({
         swaggerBuilder.addModel({
             name: 'UpdateProduct',
             properties: {
-                name: PropertyFactory.createProperty({ type: 'string', description: 'Product name' }),
-                description: PropertyFactory.createProperty({ type: 'string', description: 'Product description' }),
-                categoryID: PropertyFactory.createProperty({ type: 'string', description: 'Category id' }),
-                htmlDomDescription: PropertyFactory.createProperty({ type: 'string', description: 'HTML description' }),
-                productImage: PropertyFactory.createProperty({ type: 'array', items: { type: 'string' }, description: 'Product image' }),
+                name: PropertyFactory.createProperty({
+                    type: 'string',
+                    description: 'Product name',
+                }),
+                description: PropertyFactory.createProperty({
+                    type: 'string',
+                    description: 'Product description',
+                }),
+                categoryID: PropertyFactory.createProperty({
+                    type: 'string',
+                    description: 'Category id',
+                }),
+                htmlDomDescription: PropertyFactory.createProperty({
+                    type: 'string',
+                    description: 'HTML description',
+                }),
+                productImage: PropertyFactory.createProperty({
+                    type: 'array',
+                    items: { type: 'string' },
+                    description: 'Product image',
+                }),
             },
         });
         swaggerBuilder.addRoute({
-            description: "Update product by id",
+            description: 'Update product by id',
             route: '/products/{id}',
             tags: [MODULE_NAME],
             method: 'patch',
@@ -152,20 +208,23 @@ export const createProductModule = createModuleFactory({
                     type: 'string',
                     description: 'Product id',
                     required: true,
-                })
+                }),
             ],
             body: updatedProduct,
-        })
+        });
         router.patch(
             '/:id',
             productUpdateDtoValidator,
             createHandler(async (req, res) => {
-                const product = await createProductsService.updateProduct(req.params.id, req.body);
+                const product = await createProductsService.updateProduct(
+                    req.params.id,
+                    req.body,
+                );
                 return HttpResponseBuilder.buildOK(res, product);
             }),
         );
         swaggerBuilder.addRoute({
-            description: "Delete product by id",
+            description: 'Delete product by id',
             route: '/products/:id',
             tags: [MODULE_NAME],
             method: 'delete',
@@ -178,7 +237,7 @@ export const createProductModule = createModuleFactory({
                     required: true,
                 }),
             ],
-        })
+        });
         router.delete(
             '/:id',
             createHandler(async (req, res) => {
@@ -190,11 +249,15 @@ export const createProductModule = createModuleFactory({
         swaggerBuilder.addModel({
             name: 'UpdateVariantOptions',
             properties: {
-                variantOptions: PropertyFactory.createProperty({ type: 'array', model: 'VariantOptions', description: 'Variant options' }),
+                variantOptions: PropertyFactory.createProperty({
+                    type: 'array',
+                    model: 'VariantOptions',
+                    description: 'Variant options',
+                }),
             },
         });
         swaggerBuilder.addRoute({
-            description: "Update variant options by id",
+            description: 'Update variant options by id',
             route: '/products/{id}/variant-options',
             tags: [MODULE_NAME],
             method: 'patch',
@@ -208,14 +271,17 @@ export const createProductModule = createModuleFactory({
                 }),
             ],
             body: 'UpdateVariantOptions',
-        })
+        });
         router.patch(
             '/:id/variant-options',
             createHandler(async (req, res) => {
-                const product = await createProductsService.updateVariantOptions(req.params.id, req.body.variantOptions);
+                const product =
+                    await createProductsService.updateVariantOptions(
+                        req.params.id,
+                        req.body.variantOptions,
+                    );
                 return HttpResponseBuilder.buildOK(res, product);
             }),
         );
-    }
+    },
 });
-

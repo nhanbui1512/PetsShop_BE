@@ -4,7 +4,7 @@ import { createUserModule } from './user';
 import { createCategoryModule } from './category';
 import { createProductModule } from './product';
 import { createBlogModule } from './blog';
-import { createVariantModule } from './variant'; 
+import { createVariantModule } from './variant';
 import { createBreedModule } from './breed';
 export const createRootModule = createModuleFactory({
     path: '/api',

@@ -1,5 +1,5 @@
 import PaginationService from '../../../system/service/pagination.service';
-import { IUser, UserModel,IBlog,BlogModel } from '../../../system/model';
+import { IUser, UserModel, IBlog, BlogModel } from '../../../system/model';
 // import { logger } from 'system/logging/logger';
 class BlogService {
     private paginationService: PaginationService<IBlog>;
@@ -23,11 +23,12 @@ class BlogService {
                 page: blogQuery.page || 1,
                 limit: blogQuery.limit || 10,
                 sort: sortOptions,
-                populate: [
-                    { path: 'category', select: 'name' }
-                ]
+                populate: [{ path: 'category', select: 'name' }],
             };
-            const paginatedResult = await this.paginationService.paginate(query, options);
+            const paginatedResult = await this.paginationService.paginate(
+                query,
+                options,
+            );
 
             return paginatedResult;
         } catch (error) {
@@ -36,16 +37,18 @@ class BlogService {
     }
     async getById(id: string) {
         try {
-            return await BlogModel.findById(id).lean().populate({ path: 'category', select: 'name' });
+            return await BlogModel.findById(id)
+                .lean()
+                .populate({ path: 'category', select: 'name' });
         } catch (error) {
             throw error;
         }
     }
     async updateBlog(id: string, blog: any) {
         try {
-            const updatedBlog = await BlogModel
-            .findByIdAndUpdate(id, blog
-            , { new: true });
+            const updatedBlog = await BlogModel.findByIdAndUpdate(id, blog, {
+                new: true,
+            });
             return updatedBlog;
         } catch (error) {
             throw error;

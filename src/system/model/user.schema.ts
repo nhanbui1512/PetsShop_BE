@@ -9,9 +9,9 @@ export enum userRoleEnum {
 
 export enum UserRoles {
     ADMIN = 'admin',
-    USER =  'user',
+    USER = 'user',
 }
-export interface IUser extends Document,SoftDeleteDocument {
+export interface IUser extends Document, SoftDeleteDocument {
     _id: Object;
     email: string;
     password: string;
@@ -29,7 +29,7 @@ export interface IUser extends Document,SoftDeleteDocument {
 }
 
 const IUserSchema = new Schema<IUser>(
-    {   
+    {
         email: {
             type: String,
             required: true,
@@ -46,12 +46,24 @@ const IUserSchema = new Schema<IUser>(
         password: { type: String, required: true },
         firstName: { type: String, required: true },
         lastName: { type: String, required: true },
-        profileImage: { type: String, default: 'https://www.shutterstock.com/image-vector/default-avatar-profile-icon-vector-260nw-1725655669.jpg' },
+        profileImage: {
+            type: String,
+            default:
+                'https://www.shutterstock.com/image-vector/default-avatar-profile-icon-vector-260nw-1725655669.jpg',
+        },
         refreshToken: { type: String },
         isActive: { type: Boolean, default: true },
-        role: { type: String, enum: Object.values(userRoleEnum), default: userRoleEnum.USER },
+        role: {
+            type: String,
+            enum: Object.values(userRoleEnum),
+            default: userRoleEnum.USER,
+        },
         expired: { type: Date },
-        UserRoles: { type: String, enum: Object.values(UserRoles), default: UserRoles.USER },
+        UserRoles: {
+            type: String,
+            enum: Object.values(UserRoles),
+            default: UserRoles.USER,
+        },
     },
     { collection: 'user', timestamps: true },
 );

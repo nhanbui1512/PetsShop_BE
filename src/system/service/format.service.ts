@@ -5,8 +5,12 @@ class DateFormattingService {
         }
 
         data.docs.forEach((doc: any) => {
-            doc.createdAt = DateFormattingService.formatDate(new Date(doc.createdAt));
-            doc.updatedAt = DateFormattingService.formatDate(new Date(doc.updatedAt));
+            doc.createdAt = DateFormattingService.formatDate(
+                new Date(doc.createdAt),
+            );
+            doc.updatedAt = DateFormattingService.formatDate(
+                new Date(doc.updatedAt),
+            );
         });
 
         return data;

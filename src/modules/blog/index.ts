@@ -1,1 +1,1 @@
-export * from './blog.controller'
+export * from './blog.controller';

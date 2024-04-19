@@ -24,12 +24,17 @@ class UserService {
             const options = {
                 page: userQuery.page || 1,
                 limit: userQuery.limit || 10,
-                sort: sortOptions 
+                sort: sortOptions,
             };
 
-            const paginatedResult = await this.paginationService.paginate(query, options);
+            const paginatedResult = await this.paginationService.paginate(
+                query,
+                options,
+            );
 
-            const sanitizedResult = paginatedResult.docs.map(doc => _.omit(doc.toObject(), 'password'));
+            const sanitizedResult = paginatedResult.docs.map(doc =>
+                _.omit(doc.toObject(), 'password'),
+            );
 
             return { ...paginatedResult, docs: sanitizedResult };
         } catch (error) {
@@ -47,8 +52,9 @@ class UserService {
     }
     async updateUser(id: string, user: any) {
         try {
-            const updatedUser = await UserModel.findByIdAndUpdate
-            (id, user, { new: true });
+            const updatedUser = await UserModel.findByIdAndUpdate(id, user, {
+                new: true,
+            });
             return updatedUser;
         } catch (error) {
             throw error;

@@ -31,9 +31,14 @@ export const CardBreedSchema = new Schema<ICardBreed>(
         description: { type: String, required: true },
     },
     { collection: 'cardBreed', timestamps: true },
-);  
-CardBreedSchema.plugin(MongooseDelete, { deletedAt: true, overrideMethods: true });
+);
+CardBreedSchema.plugin(MongooseDelete, {
+    deletedAt: true,
+    overrideMethods: true,
+});
 CardBreedSchema.plugin(paginate);
 
-
-export const CardBreedModel: SoftDeleteModel = model<ICardBreed>('cardBreed', CardBreedSchema);
+export const CardBreedModel: SoftDeleteModel = model<ICardBreed>(
+    'cardBreed',
+    CardBreedSchema,
+);

@@ -18,7 +18,7 @@ export const createVariantModule = createModuleFactory({
 
         // swaggerBuilder.addRoute({
         //     description: "Get all variant options",
-        //     route: '/variant-options', 
+        //     route: '/variant-options',
         //     tags: [MODULE_NAME],
         //     method: 'get',
         //     params: [
@@ -56,7 +56,7 @@ export const createVariantModule = createModuleFactory({
 
         // edit variant options
         swaggerBuilder.addRoute({
-            description: "Edit variant options",
+            description: 'Edit variant options',
             route: '/variant-options/{id}',
             method: 'put',
             body: 'UpdateVariantOptions',
@@ -70,23 +70,30 @@ export const createVariantModule = createModuleFactory({
                     required: true,
                 }),
             ],
-        })
+        });
         router.put(
             '/:id',
             createHandler(async (req, res) => {
                 const { id } = req.params;
-                const variantOptions = await VariantOptionsModel.findByIdAndUpdate
-                    (id, req.body.variantOptions[0], { new: true });
+                const variantOptions =
+                    await VariantOptionsModel.findByIdAndUpdate(
+                        id,
+                        req.body.variantOptions[0],
+                        { new: true },
+                    );
                 if (!variantOptions) {
-                    return HttpResponseBuilder.buildBadRequest(res, 'Variant option not found');
+                    return HttpResponseBuilder.buildBadRequest(
+                        res,
+                        'Variant option not found',
+                    );
                 }
                 return HttpResponseBuilder.buildOK(res, variantOptions);
-            })
+            }),
         );
 
         // delete variant options
         swaggerBuilder.addRoute({
-            description: "Delete variant options",
+            description: 'Delete variant options',
             route: '/variant-options/{id}',
             method: 'delete',
             tags: [MODULE_NAME],
@@ -99,18 +106,21 @@ export const createVariantModule = createModuleFactory({
                     required: true,
                 }),
             ],
-        })
+        });
         router.delete(
             '/:id',
             createHandler(async (req, res) => {
                 const { id } = req.params;
-                const variantOptions = await VariantOptionsModel.findByIdAndDelete(id);
+                const variantOptions =
+                    await VariantOptionsModel.findByIdAndDelete(id);
                 if (!variantOptions) {
-                    return HttpResponseBuilder.buildBadRequest(res, 'Variant option not found');
+                    return HttpResponseBuilder.buildBadRequest(
+                        res,
+                        'Variant option not found',
+                    );
                 }
                 return HttpResponseBuilder.buildOK(res, variantOptions);
-            })
+            }),
         );
-
-    }
+    },
 });

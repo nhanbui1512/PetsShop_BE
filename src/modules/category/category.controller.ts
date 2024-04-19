@@ -5,7 +5,7 @@ import { createHandler } from '../../system/factories';
 import { HttpResponseBuilder } from '../../system/builders/http-response.builder';
 import { identityGuard } from '../auth/auth-service/service';
 import { logger } from '../../system/logging/logger';
-import  { categoryService }  from './category-service';
+import { categoryService } from './category-service';
 import { ICategory } from '../../system/model';
 const MODULE_NAME = 'Category';
 
@@ -16,11 +16,11 @@ export const createCategoryModule = createModuleFactory({
         swaggerBuilder.addTag(MODULE_NAME);
 
         swaggerBuilder.addRoute({
-            description: "Get all categories",
+            description: 'Get all categories',
             route: '/categories',
             tags: [MODULE_NAME],
             method: 'get',
-        })
+        });
         router.get(
             '/',
             createHandler(async (req, res) => {
@@ -38,26 +38,27 @@ export const createCategoryModule = createModuleFactory({
             },
         });
         swaggerBuilder.addRoute({
-            description: "Create category",
+            description: 'Create category',
             route: '/categories',
             tags: [MODULE_NAME],
             body: CATEGORY_DTO_NAME,
             method: 'post',
-        })
+        });
         router.post(
             '/',
             createHandler(async (req, res) => {
                 const createCategoryDTO = {
                     name: req.body.name,
                     description: req.body.description,
-                }
-                const category: ICategory = await categoryService.createCategory(createCategoryDTO);
+                };
+                const category: ICategory =
+                    await categoryService.createCategory(createCategoryDTO);
                 return HttpResponseBuilder.buildCreated(res, category);
             }),
         );
         //get products by Id
         swaggerBuilder.addRoute({
-            description: "Get products by category",
+            description: 'Get products by category',
             route: '/categories/{id}',
             tags: [MODULE_NAME],
             method: 'get',
@@ -84,14 +85,17 @@ export const createCategoryModule = createModuleFactory({
                     required: false,
                 }),
             ],
-        })
+        });
         router.get(
             '/:id',
             createHandler(async (req, res) => {
-                const category = await categoryService.getCategoryById(req.params.id, req.query.page, req.query.limit);
+                const category = await categoryService.getCategoryById(
+                    req.params.id,
+                    req.query.page,
+                    req.query.limit,
+                );
                 return HttpResponseBuilder.buildOK(res, category);
             }),
         );
-    }
+    },
 });
-

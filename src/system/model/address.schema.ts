@@ -32,4 +32,7 @@ const IAddressSchema = new Schema<IAddress>(
     { collection: 'address', timestamps: true },
 );
 
-export const AddressModel: Model<IAddress> = model<IAddress>('address', IAddressSchema);
+export const AddressModel: Model<IAddress> = model<IAddress>(
+    'address',
+    IAddressSchema,
+);

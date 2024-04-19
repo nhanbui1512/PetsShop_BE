@@ -3,25 +3,25 @@ import paginate from 'mongoose-paginate-v2';
 import { SoftDeleteDocument } from 'mongoose-delete';
 import MongooseDelete, { SoftDeleteModel } from 'mongoose-delete';
 
-export interface IBlog extends Document,SoftDeleteDocument {
+export interface IBlog extends Document, SoftDeleteDocument {
     _id: Object;
     title: string;
     content: string;
     category: Object;
     createdAt?: Date;
-    shortContent : string;
+    shortContent: string;
     ate;
     updatedAt?: Date;
-    thumbnail: { type: String,  },
+    thumbnail: { type: String };
 }
 
 const BlogSchema = new Schema<IBlog>(
     {
-        title: { type: String,  },
-        content: { type: String,  },
+        title: { type: String },
+        content: { type: String },
         category: { type: Schema.Types.ObjectId, ref: 'category' },
-        shortContent : { type: String,  },
-        thumbnail: { type: String,  },
+        shortContent: { type: String },
+        thumbnail: { type: String },
     },
     { collection: 'blog', timestamps: true },
 );
@@ -38,4 +38,4 @@ BlogSchema.virtual('updateDate').get(function (this: any) {
     return `${this.updatedAt.getDate()} + '/' + ${this.updatedAt.getMonth()} + '/' + ${this.updatedAt.getFullYear()} - ${this.updatedAt.getHours()} + ':' + ${this.updatedAt.getMinutes()} + ':' + ${this.updatedAt.getSeconds()}`;
 });
 
-export const BlogModel:SoftDeleteModel = model<IBlog>('blog', BlogSchema);
+export const BlogModel: SoftDeleteModel = model<IBlog>('blog', BlogSchema);

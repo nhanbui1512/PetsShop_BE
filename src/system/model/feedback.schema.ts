@@ -19,4 +19,7 @@ export const FeedbackSchema = new Schema<IFeedback>(
     },
     { collection: 'feedback', timestamps: true },
 );
-export const FeedbackModel: Model<IFeedback> = model<IFeedback>('feedback', FeedbackSchema);
+export const FeedbackModel: Model<IFeedback> = model<IFeedback>(
+    'feedback',
+    FeedbackSchema,
+);

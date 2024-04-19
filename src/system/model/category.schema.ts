@@ -18,4 +18,7 @@ const ICategorySchema = new Schema<ICategory>(
     },
     { collection: 'category', timestamps: true },
 );
-export const CategoryModel: Model<ICategory> = model<ICategory>('category', ICategorySchema);
+export const CategoryModel: Model<ICategory> = model<ICategory>(
+    'category',
+    ICategorySchema,
+);

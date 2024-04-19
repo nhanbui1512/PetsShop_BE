@@ -38,5 +38,11 @@ export const ConversationSchema = new Schema<IConversation>(
     { collection: 'conversation', timestamps: true },
 );
 
-export const MessageModel: Model<IMessage> = model<IMessage>('message', MessageSchema);
-export const ConversationModel: Model<IConversation> = model<IConversation>('conversation', ConversationSchema);
+export const MessageModel: Model<IMessage> = model<IMessage>(
+    'message',
+    MessageSchema,
+);
+export const ConversationModel: Model<IConversation> = model<IConversation>(
+    'conversation',
+    ConversationSchema,
+);

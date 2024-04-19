@@ -1,17 +1,19 @@
-import { VariantOptionsModel,ProductModel } from '../../model';
-import { connectDatabase } from "../database.connector";
+import { VariantOptionsModel, ProductModel } from '../../model';
+import { connectDatabase } from '../database.connector';
 async function addQuantityToVariantOptions() {
     try {
         // Tìm tất cả các bản ghi mà không có trường 'quantity'
-        const optionsWithoutQuantity = await VariantOptionsModel.find({ quantity: { $exists: false } });
+        const optionsWithoutQuantity = await VariantOptionsModel.find({
+            quantity: { $exists: false },
+        });
 
         // Tạo một mảng các tác vụ cập nhật để thêm trường 'quantity' cho mỗi bản ghi
         const updateOperations = optionsWithoutQuantity.map(option => {
             return {
                 updateOne: {
                     filter: { _id: option._id },
-                    update: { $set: { quantity: 20 } }
-                }
+                    update: { $set: { quantity: 20 } },
+                },
             };
         });
 
@@ -26,15 +28,17 @@ async function addQuantityToVariantOptions() {
 async function addHtmlDomDescription() {
     try {
         // Tìm tất cả các bản ghi mà không có trường 'htmlDomDescription'
-        const productsWithoutHtml = await ProductModel.find({ htmlDomDescription: { $exists: false } });
+        const productsWithoutHtml = await ProductModel.find({
+            htmlDomDescription: { $exists: false },
+        });
 
         // Tạo một mảng các tác vụ cập nhật để thêm trường 'htmlDomDescription' cho mỗi bản ghi
         const updateOperations = productsWithoutHtml.map(product => {
             return {
                 updateOne: {
                     filter: { _id: product._id },
-                    update: { $set: { htmlDomDescription: '' } }
-                }
+                    update: { $set: { htmlDomDescription: '' } },
+                },
             };
         });
 
@@ -57,5 +61,5 @@ async function seedData() {
         console.error('Error seeding data:', error);
         return;
     }
-    }
+}
 seedData();

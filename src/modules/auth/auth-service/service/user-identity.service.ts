@@ -10,7 +10,7 @@ class UserIdentityService {
         this.EXPIRE_DAYS = configStore.get('EXPIRE_DAYS', '1d');
     }
 
-    async sign(user:any) {
+    async sign(user: any) {
         const userId = user._id;
         const userData = omit(user, 'password');
         return {

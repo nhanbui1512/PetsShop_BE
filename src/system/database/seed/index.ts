@@ -1,13 +1,11 @@
-import { UserModel,IUser } from "system/model";
+import { UserModel, IUser } from 'system/model';
 import { connectDatabase } from '../database.connector';
-import { hashService, userIdentityService } from '../../../modules/auth/auth-service/service';
+import {
+    hashService,
+    userIdentityService,
+} from '../../../modules/auth/auth-service/service';
 async () => {
-    await connectDatabase()
-}
+    await connectDatabase();
+};
 
-
-
-function seedUser () {
-    
-}
-
+function seedUser() {}

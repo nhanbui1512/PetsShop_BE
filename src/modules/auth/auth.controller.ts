@@ -27,7 +27,7 @@ export const createAuthModule = createModuleFactory({
             },
         });
         swaggerBuilder.addRoute({
-            description: "Login to the system. Returns JWT token.",
+            description: 'Login to the system. Returns JWT token.',
             //params search and sort pagination limit and offset
             params: {
                 search: PropertyFactory.createProperty({ type: 'string' }),
@@ -61,7 +61,7 @@ export const createAuthModule = createModuleFactory({
                 firstName: PropertyFactory.createProperty({ type: 'string' }),
                 lastName: PropertyFactory.createProperty({ type: 'string' }),
                 email: PropertyFactory.createProperty({ type: 'string' }),
-                password: PropertyFactory.createProperty({ type: 'string' })
+                password: PropertyFactory.createProperty({ type: 'string' }),
             },
         });
         swaggerBuilder.addRoute({
@@ -117,14 +117,36 @@ export const createAuthModule = createModuleFactory({
             method: 'post',
             body: FORGOT_PASSWORD_DTO_NAME,
         }),
+            router.post(
+                '/forgot-password',
+                createHandler(async (req, res) => {
+                    logger.debug('Forgot password' + req.body);
+                    await authenticationService.forgotPassword(req.body.email);
+                    return HttpResponseBuilder.buildOK(res, 'Sending mail was successful');
+                }),
+            );
+        const RESET_PASSWORD_DTO_NAME = 'ResetPasswordDTO';
 
-        router.post(
-            '/forgot-password',
-            createHandler(async (req, res) => {
-                logger.debug('Forgot password'+ req.body);
-                await authenticationService.forgotPassword(req.body.email);
-                return HttpResponseBuilder.buildOK(res, '');
-            }),
-        );
+        swaggerBuilder.addModel({
+            name:'ResetPasswordDTO',
+            properties:{
+                refreshToken: PropertyFactory.createProperty({type:'string'}),
+                newPassword: PropertyFactory.createProperty({type:'string'})
+            }
+        })
+        swaggerBuilder.addRoute({
+            route:'/auth/reset-password',
+            tags: [MODULE_NAME],
+            method: 'post',
+            body: RESET_PASSWORD_DTO_NAME
+        })    
+            router.post(
+                '/reset-password',
+                createHandler(async (req, res) => {
+                    logger.debug('Reset password' + req.body);
+                    await authenticationService.resetPassword(req.body);
+                    return HttpResponseBuilder.buildOK(res,'Reset password successfully');
+                }),
+            )
     },
 });

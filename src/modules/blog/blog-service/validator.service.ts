@@ -7,7 +7,7 @@ export const blogCreateDtoValidator = createInboundValidatorByJoi(
         content: Joi.string().required(),
         category: Joi.string(),
         shortContent: Joi.string(),
-    })
+    }),
 );
 
 export const blogUpdateDtoValidator = createInboundValidatorByJoi(
@@ -16,5 +16,5 @@ export const blogUpdateDtoValidator = createInboundValidatorByJoi(
         content: Joi.string(),
         category: Joi.string(),
         shortContent: Joi.string(),
-    })
-)
+    }),
+);
