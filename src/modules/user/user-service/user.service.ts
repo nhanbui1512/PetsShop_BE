@@ -1,12 +1,14 @@
 import PaginationService from '../../../system/service/pagination.service';
 import { IUser, UserModel } from '../../../system/model';
+import {hashService }   from '../../../modules/auth/auth-service/service';
 import omit from 'lodash/omit';
 import _ from 'lodash';
 class UserService {
     private paginationService: PaginationService<IUser>;
-
+    private readonly hashService = hashService;
     constructor(UserModel: any) {
         this.paginationService = new PaginationService<IUser>(UserModel);
+        this.hashService = hashService;
     }
 
     async getUsers(userQuery: any) {
@@ -52,7 +54,17 @@ class UserService {
     }
     async updateUser(id: string, user: any) {
         try {
-            const updatedUser = await UserModel.findByIdAndUpdate(id, user, {
+            let hashedPassword;
+            if (user.password) {
+                hashedPassword = await this.hashService.hash(user.password);
+            }
+    
+            const updatedUserData = { ...user };
+            if (hashedPassword) {
+                updatedUserData.password = hashedPassword;
+            }
+    
+            const updatedUser = await UserModel.findByIdAndUpdate(id, updatedUserData, {
                 new: true,
             });
             return updatedUser;
@@ -60,6 +72,7 @@ class UserService {
             throw error;
         }
     }
+    
     async deleteUser(id: string) {
         try {
             await UserModel.findByIdAndDelete(id);
