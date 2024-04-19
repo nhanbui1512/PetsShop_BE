@@ -32,10 +32,13 @@ BlogSchema.plugin(paginate);
 BlogSchema.index({ title: 'text' });
 //virtual format day
 BlogSchema.virtual('createDate').get(function (this: any) {
-    return `${this.createdAt.getDate()} + '/' + ${this.createdAt.getMonth()} + '/' + ${this.createdAt.getFullYear()} - ${this.createdAt.getHours()} + ':' + ${this.createdAt.getMinutes()} + ':' + ${this.createdAt.getSeconds()}`;
+    return `${this.createdAt.getDate()}/${this.createdAt.getMonth()}/${this.createdAt.getFullYear()} - ${this.createdAt.getHours()}:${this.createdAt.getMinutes()}:${this.createdAt.getSeconds()}`;
 });
 BlogSchema.virtual('updateDate').get(function (this: any) {
-    return `${this.updatedAt.getDate()} + '/' + ${this.updatedAt.getMonth()} + '/' + ${this.updatedAt.getFullYear()} - ${this.updatedAt.getHours()} + ':' + ${this.updatedAt.getMinutes()} + ':' + ${this.updatedAt.getSeconds()}`;
+    return `${this.updatedAt.getDate()}/${this.updatedAt.getMonth()}/${this.updatedAt.getFullYear()}:${this.updatedAt.getHours()}:${this.updatedAt.getMinutes()}:${this.updatedAt.getSeconds()}`;
 });
+
+BlogSchema.set('toObject', { virtuals: true });
+BlogSchema.set('toJSON', { virtuals: true });
 
 export const BlogModel: SoftDeleteModel = model<IBlog>('blog', BlogSchema);
