@@ -246,15 +246,28 @@ export const createProductModule = createModuleFactory({
             }),
         );
         // update variant options
+        const updateVariantOptions = 'UpdateVariantOptions';
         swaggerBuilder.addModel({
             name: 'UpdateVariantOptions',
             properties: {
-                variantOptions: PropertyFactory.createProperty({
-                    type: 'array',
-                    model: 'VariantOptions',
-                    description: 'Variant options',
+                name: PropertyFactory.createProperty({
+                    type: 'string',
+                    description: 'Variant option name',
+                }),
+                value: PropertyFactory.createProperty({
+                    type: 'string',
+                    description: 'Variant option value',
+                }),
+                price: PropertyFactory.createProperty({
+                    type: 'Number',
+                    description: 'Variant option price',
+                }),
+                quantity: PropertyFactory.createProperty({
+                    type: 'Number',
+                    description: 'Variant option quantity',
                 }),
             },
+            isArray: true,
         });
         swaggerBuilder.addRoute({
             description: 'Update variant options by id',
@@ -270,7 +283,7 @@ export const createProductModule = createModuleFactory({
                     required: true,
                 }),
             ],
-            body: 'UpdateVariantOptions',
+            body: updateVariantOptions,
         });
         router.patch(
             '/:id/variant-options',
@@ -278,7 +291,7 @@ export const createProductModule = createModuleFactory({
                 const product =
                     await createProductsService.updateVariantOptions(
                         req.params.id,
-                        req.body.variantOptions,
+                        req.body,
                     );
                 return HttpResponseBuilder.buildOK(res, product);
             }),
