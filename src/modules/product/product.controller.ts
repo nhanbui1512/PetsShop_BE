@@ -293,7 +293,6 @@ export const createProductModule = createModuleFactory({
                         req.params.id,
                         req.body,
                     );
-                    logger.debug(JSON.stringify(req.body));
                 return HttpResponseBuilder.buildOK(res, product);
             }),
         );
