@@ -54,6 +54,10 @@ export const createBreedModule = createModuleFactory({
                     type: 'string',
                     description: 'Description of the breed',
                 }),
+                htmlDomDescription: PropertyFactory.createProperty({
+                    type: 'string',
+                    description: 'HTML description of the breed',
+                }),
             },
         });
 
@@ -176,6 +180,10 @@ export const createBreedModule = createModuleFactory({
                 description: PropertyFactory.createProperty({
                     type: 'string',
                     description: 'Product image',
+                }),
+                htmlDomDescription: PropertyFactory.createProperty({
+                    type: 'string',
+                    description: 'Html description',
                 }),
             },
         });
