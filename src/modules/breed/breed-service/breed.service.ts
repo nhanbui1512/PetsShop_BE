@@ -71,6 +71,7 @@ class BreedService {
                         select: 'name value price quantity',
                     },
                 });
+            return breed;
         } catch (error) {
             throw error;
         }

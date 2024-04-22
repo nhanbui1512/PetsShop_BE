@@ -6,6 +6,7 @@ import { createProductModule } from './product';
 import { createBlogModule } from './blog';
 import { createVariantModule } from './variant';
 import { createBreedModule } from './breed';
+import { createAddressModule } from './address';
 export const createRootModule = createModuleFactory({
     path: '/api',
     name: 'Root',
@@ -17,5 +18,6 @@ export const createRootModule = createModuleFactory({
         createVariantModule(router);
         createBlogModule(router);
         createBreedModule(router);
+        createAddressModule(router);
     },
 });
