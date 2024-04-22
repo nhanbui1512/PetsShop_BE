@@ -14,6 +14,7 @@ export interface IOrder extends Document {
     items: Object[];
     total: number;
     status: OrderStatus;
+    address: Object;
     createdAt?: Date;
     updatedAt?: Date;
 }
@@ -58,6 +59,7 @@ export const OrderSchema = new Schema<IOrder>(
             enum: Object.values(OrderStatus),
             default: OrderStatus.PENDING,
         },
+        address: { type: Schema.Types.ObjectId, ref: 'address' },
     },
     { collection: 'order', timestamps: true },
 );

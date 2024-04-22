@@ -1,7 +1,8 @@
-import { model, Model, Schema, Document, Mongoose } from 'mongoose';
+import { model, Schema, Document } from 'mongoose';
 import paginate from 'mongoose-paginate-v2';
-import { SoftDeleteDocument } from 'mongoose-delete';
 import MongooseDelete, { SoftDeleteModel } from 'mongoose-delete';
+import { AddressModel } from './address.schema';
+
 export enum userRoleEnum {
     USER = 'user',
     ADMIN = 'admin',
@@ -11,20 +12,18 @@ export enum UserRoles {
     ADMIN = 'admin',
     USER = 'user',
 }
-export interface IUser extends Document, SoftDeleteDocument {
-    _id: Object;
+
+export interface IUser extends Document {
     email: string;
     password: string;
     firstName: string;
     lastName: string;
-    addresses: Object[];
+    addresses: Array<any>; // Change Object[] to Array<any> or specify a specific type
     profileImage: string;
     refreshToken: string;
     expired: Date;
     UserRoles: UserRoles;
     isActive?: boolean;
-    createdAt?: Date;
-    updatedAt?: Date;
     role: userRoleEnum;
 }
 
@@ -65,9 +64,45 @@ const IUserSchema = new Schema<IUser>(
             default: UserRoles.USER,
         },
     },
-    { collection: 'user', timestamps: true },
+    { collection: 'user', timestamps: true }
 );
+
 IUserSchema.plugin(MongooseDelete, { deletedAt: true, overrideMethods: true });
 IUserSchema.plugin(paginate);
 
-export const UserModel: SoftDeleteModel = model<IUser>('user', IUserSchema);
+IUserSchema.post('findOneAndUpdate', async function (doc) {
+    const originalDoc = await this.model.findOne(this.getQuery()).exec();
+    const originalAddresses = originalDoc.addresses.map(address => address.toString());
+    const updatedAddresses = doc.addresses.map(address => address.toString());
+
+    // Find addresses to remove
+    const addressesToRemove = originalAddresses.filter(addressId => !updatedAddresses.includes(addressId));
+
+    // Find addresses to update
+    const addressesToUpdate = updatedAddresses.filter(addressId => !originalAddresses.includes(addressId));
+
+    const addressUpdatePromises = [];
+
+    // Remove user ID from addresses to be removed
+    addressesToRemove.forEach(async addressId => {
+        const address = await AddressModel.findById(addressId);
+        if (address) {
+            address.userId.pull(doc._id);
+            addressUpdatePromises.push(address.save());
+        }
+    });
+
+    // Update user ID for addresses to be updated
+    addressesToUpdate.forEach(async addressId => {
+        const address = await AddressModel.findById(addressId);
+        if (address) {
+            address.userId = doc._id;
+            addressUpdatePromises.push(address.save());
+        }
+    });
+
+    // Wait for all address update promises to resolve
+    await Promise.all(addressUpdatePromises);
+});
+
+export const UserModel: SoftDeleteModel<IUser> = model<IUser>('user', IUserSchema);
