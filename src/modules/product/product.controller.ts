@@ -273,7 +273,7 @@ export const createProductModule = createModuleFactory({
             description: 'Update variant options by id',
             route: '/products/{id}/variant-options',
             tags: [MODULE_NAME],
-            method: 'patch',
+            method: 'post',
             params: [
                 PropertyFactory.createParam({
                     name: 'id',
@@ -285,7 +285,7 @@ export const createProductModule = createModuleFactory({
             ],
             body: updateVariantOptions,
         });
-        router.patch(
+        router.post(
             '/:id/variant-options',
             createHandler(async (req, res) => {
                 const product =
