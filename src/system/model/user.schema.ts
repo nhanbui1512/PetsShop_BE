@@ -72,8 +72,8 @@ IUserSchema.plugin(paginate);
 
 IUserSchema.post('findOneAndUpdate', async function (doc) {
     const originalDoc = await this.model.findOne(this.getQuery()).exec();
-    const originalAddresses = originalDoc.addresses.map(address => address.toString());
-    const updatedAddresses = doc.addresses.map(address => address.toString());
+    const originalAddresses = originalDoc.addresses.map(address => address._id.toString());
+    const updatedAddresses = doc.addresses.map(address => address._id.toString());
 
     // Find addresses to remove
     const addressesToRemove = originalAddresses.filter(addressId => !updatedAddresses.includes(addressId));
