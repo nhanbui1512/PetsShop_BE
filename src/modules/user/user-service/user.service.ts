@@ -27,6 +27,11 @@ class UserService {
                 page: userQuery.page || 1,
                 limit: userQuery.limit || 10,
                 sort: sortOptions,
+                populate: [
+                    {
+                        path: 'addresses',
+                    }
+                ]
             };
 
             const paginatedResult = await this.paginationService.paginate(
@@ -45,7 +50,7 @@ class UserService {
     }
     async getById(id: string) {
         try {
-            const user = await UserModel.findById(id).lean();
+            const user = await UserModel.findById(id).lean().populate('addresses');
 
             return omit(user, 'password');
         } catch (error) {
@@ -66,7 +71,7 @@ class UserService {
     
             const updatedUser = await UserModel.findByIdAndUpdate(id, updatedUserData, {
                 new: true,
-            });
+            }).populate('addresses');
             return updatedUser;
         } catch (error) {
             throw error;
