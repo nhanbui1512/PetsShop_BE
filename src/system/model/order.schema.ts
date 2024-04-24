@@ -7,6 +7,8 @@ import { VariantOptionsSchema } from './product.schema';
 export enum OrderStatus {
     PENDING = 'PENDING',
     CONFIRMED = 'CONFIRMED',
+    // add user cancel order
+    USER_CANCELLED = 'USER_CANCELLED',
     CANCELLED = 'CANCELLED',
     DELIVERED = 'DELIVERED',
 }
@@ -70,13 +72,18 @@ export const OrderSchema = new Schema<IOrder>(
             enum: Object.values(OrderStatus),
             default: OrderStatus.PENDING,
         },
-        address: { type: Schema.Types.ObjectId, ref: 'address' },
+        address: { type: String, required: true }
     },
     { collection: 'order', timestamps: true },
 );
 
-
-
+OrderSchema.plugin(MongooseDelete, {
+    deletedAt: true,
+    overrideMethods: true,
+});
+OrderSchema.plugin(paginate);
+// index phone and status 
+OrderSchema.index({ phone: 'text', status: 'text' });
 OrderSchema.post('findOneAndUpdate', async function(doc) {
     try {
         const order = await OrderModel.findById(doc._id).select('status items').populate({
