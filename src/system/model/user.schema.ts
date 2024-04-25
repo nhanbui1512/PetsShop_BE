@@ -16,8 +16,7 @@ export interface IUser extends Document {
     email: string;
     password: string;
     firstName: string;
-    lastName: string;
-    addresses: Array<any>; // Change Object[] to Array<any> or specify a specific type
+    lastName: string;// Change Object[] to Array<any> or specify a specific type
     profileImage: string;
     refreshToken: string;
     expired: Date;
@@ -35,12 +34,6 @@ const IUserSchema = new Schema<IUser>(
             index: true,
             unique: true,
         },
-        addresses: [
-            {
-                type: Schema.Types.ObjectId,
-                ref: 'address',
-            },
-        ],
         password: { type: String, required: true },
         firstName: { type: String, required: true },
         lastName: { type: String, required: true },

@@ -63,7 +63,7 @@ class AuthenticationService {
     }
 
     async getMe(userId) {
-        const user = await UserModel.findById(userId).lean().populate('addresses');
+        const user = await UserModel.findById(userId).lean();
 
         return omit(user, 'password');
     }

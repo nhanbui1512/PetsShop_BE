@@ -27,11 +27,6 @@ class UserService {
                 page: userQuery.page || 1,
                 limit: userQuery.limit || 10,
                 sort: sortOptions,
-                populate: [
-                    {
-                        path: 'addresses',
-                    },
-                ],
             };
 
             const paginatedResult = await this.paginationService.paginate(
