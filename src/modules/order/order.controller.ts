@@ -6,8 +6,11 @@ import { HttpResponseBuilder } from '../../system/builders/http-response.builder
 import { identityGuard } from '../auth/auth-service/service';
 import { logger } from '../../system/logging/logger';
 import { createOrderService } from './order-service/order.service';
-import { OrderStatus } from '../../system/model'
-import { orderUpdateValidator, orderCreateValidator } from './order-service/order.validator';
+import { OrderStatus } from '../../system/model';
+import {
+    orderUpdateValidator,
+    orderCreateValidator,
+} from './order-service/order.validator';
 const MODULE_NAME = 'Order';
 export const createOrderModule = createModuleFactory({
     path: '/orders',
@@ -19,45 +22,66 @@ export const createOrderModule = createModuleFactory({
         swaggerBuilder.addModel({
             name: 'OrderItem',
             properties: {
-                productId: PropertyFactory.createProperty({ description: 'Product id' }),
-                quantity: PropertyFactory.createProperty({ description: 'Product quantity' }),
-                variantOptions: PropertyFactory.createProperty({ description: 'Product variant options' }),
-                price: PropertyFactory.createProperty({ description: 'Product price' }),
+                productId: PropertyFactory.createProperty({
+                    description: 'Product id',
+                }),
+                quantity: PropertyFactory.createProperty({
+                    description: 'Product quantity',
+                }),
+                variantOptions: PropertyFactory.createProperty({
+                    description: 'Product variant options',
+                }),
+                price: PropertyFactory.createProperty({
+                    description: 'Product price',
+                }),
             },
-        })
+        });
         swaggerBuilder.addModel({
             name: CREATE_ORDER_DTO,
             properties: {
-                userId: PropertyFactory.createProperty({ description: 'User id' }),
+                userId: PropertyFactory.createProperty({
+                    description: 'User id',
+                }),
                 items: PropertyFactory.createProperty({
                     description: 'Order items',
                     type: 'array',
                     model: 'OrderItem',
                 }),
-                total: PropertyFactory.createProperty({ description: 'Total price' }),
-                phone: PropertyFactory.createProperty({ description: 'Phone number' }),
-                status: PropertyFactory.createProperty({ description: 'Order status', enum:OrderStatus  }),
-                address: PropertyFactory.createProperty({ description: 'Address string' }),
+                total: PropertyFactory.createProperty({
+                    description: 'Total price',
+                }),
+                phone: PropertyFactory.createProperty({
+                    description: 'Phone number',
+                }),
+                status: PropertyFactory.createProperty({
+                    description: 'Order status',
+                    enum: OrderStatus,
+                }),
+                address: PropertyFactory.createProperty({
+                    description: 'Address string',
+                }),
             },
         });
         swaggerBuilder.addRoute({
             description: 'create order',
-            route:'/orders',
+            route: '/orders',
             tags: [MODULE_NAME],
             method: 'post',
-            body:CREATE_ORDER_DTO,
-        })
-        
-        router.post('/',
-        orderCreateValidator,
-        createHandler(async (req, res) => {
-            const order = await createOrderService.createOrder(req.body);
-            return HttpResponseBuilder.buildOK(res, order);
-        }));
+            body: CREATE_ORDER_DTO,
+        });
+
+        router.post(
+            '/',
+            orderCreateValidator,
+            createHandler(async (req, res) => {
+                const order = await createOrderService.createOrder(req.body);
+                return HttpResponseBuilder.buildOK(res, order);
+            }),
+        );
         // get orders
         swaggerBuilder.addRoute({
             description: 'get orders',
-            route:'/orders',
+            route: '/orders',
             tags: [MODULE_NAME],
             method: 'get',
             params: [
@@ -90,15 +114,18 @@ export const createOrderModule = createModuleFactory({
                     required: false,
                 }),
             ],
-        })
-        router.get('/', createHandler(async (req, res) => {
-            const orders = await createOrderService.getOrders(req.query);
-            return HttpResponseBuilder.buildOK(res, orders);
-        }));
+        });
+        router.get(
+            '/',
+            createHandler(async (req, res) => {
+                const orders = await createOrderService.getOrders(req.query);
+                return HttpResponseBuilder.buildOK(res, orders);
+            }),
+        );
         // get order by id
         swaggerBuilder.addRoute({
             description: 'get order by id',
-            route:'/orders/{id}',
+            route: '/orders/{id}',
             tags: [MODULE_NAME],
             method: 'get',
             params: [
@@ -110,21 +137,34 @@ export const createOrderModule = createModuleFactory({
                     required: true,
                 }),
             ],
-        })
-        router.get('/:id', createHandler(async (req, res) => {
-            const order = await createOrderService.getById(req.params.id);
-            return HttpResponseBuilder.buildOK(res, order);
-        }));
+        });
+        router.get(
+            '/:id',
+            createHandler(async (req, res) => {
+                const order = await createOrderService.getById(req.params.id);
+                if (order !== null) {
+                    order.items.map(item => {
+                        delete item.productId.htmlDomDescription;
+                        delete item.productId.variantOptions;
+                        item.variantOptions = item.variantOptions[0];
+                    });
+                }
+
+                return HttpResponseBuilder.buildOK(res, order);
+            }),
+        );
         // update order
         swaggerBuilder.addModel({
             name: 'UpdateOrderDto',
             properties: {
-                status: PropertyFactory.createProperty({ description: 'Order status' }),
+                status: PropertyFactory.createProperty({
+                    description: 'Order status',
+                }),
             },
-        })
+        });
         swaggerBuilder.addRoute({
             description: 'update order',
-            route:'/orders/{id}',
+            route: '/orders/{id}',
             tags: [MODULE_NAME],
             method: 'patch',
             params: [
@@ -136,17 +176,22 @@ export const createOrderModule = createModuleFactory({
                     required: true,
                 }),
             ],
-            body:'UpdateOrderDto',
-        })
-        router.patch('/:id', 
-        createHandler(async (req, res) => {
-            const order = await createOrderService.updateOrder(req.params.id, req.body);
-            return HttpResponseBuilder.buildOK(res, order);
-        }));
+            body: 'UpdateOrderDto',
+        });
+        router.patch(
+            '/:id',
+            createHandler(async (req, res) => {
+                const order = await createOrderService.updateOrder(
+                    req.params.id,
+                    req.body,
+                );
+                return HttpResponseBuilder.buildOK(res, order);
+            }),
+        );
         // delete order
         swaggerBuilder.addRoute({
             description: 'delete order',
-            route:'/orders/{id}',
+            route: '/orders/{id}',
             tags: [MODULE_NAME],
             method: 'delete',
             params: [
@@ -158,23 +203,28 @@ export const createOrderModule = createModuleFactory({
                     required: true,
                 }),
             ],
-        })
-        router.delete('/:id', createHandler(async (req, res) => {
-            await createOrderService.deleteOrder(req.params.id);
-            return HttpResponseBuilder.buildNoContent(res);
-        }));
+        });
+        router.delete(
+            '/:id',
+            createHandler(async (req, res) => {
+                await createOrderService.deleteOrder(req.params.id);
+                return HttpResponseBuilder.buildNoContent(res);
+            }),
+        );
         // create enum model for order status
         swaggerBuilder.addModel({
-
             name: 'OrderStatus',
             properties: {
-               status: PropertyFactory.createProperty({ description: 'Order status', enum:OrderStatus}),
+                status: PropertyFactory.createProperty({
+                    description: 'Order status',
+                    enum: OrderStatus,
+                }),
             },
         });
 
         swaggerBuilder.addRoute({
             description: 'get order by id',
-            route:'/orders/{id}/confirm',
+            route: '/orders/{id}/confirm',
             tags: [MODULE_NAME],
             method: 'post',
             params: [
@@ -186,15 +236,25 @@ export const createOrderModule = createModuleFactory({
                     required: true,
                 }),
             ],
-            body:'OrderStatus',
+            body: 'OrderStatus',
             security: true,
-        })
-        router.post('/:id/confirm', 
-        identityGuard,
-        createHandler(async (req, res) => {
-            logger.info('confirm order ' + JSON.stringify(req.params) + ' ' + JSON.stringify(req.body));
-            const result = await createOrderService.confirmOrder(req.params.id, req.body.status);
-            return HttpResponseBuilder.buildOK(res, result);
-        }));
+        });
+        router.post(
+            '/:id/confirm',
+            identityGuard,
+            createHandler(async (req, res) => {
+                logger.info(
+                    'confirm order ' +
+                        JSON.stringify(req.params) +
+                        ' ' +
+                        JSON.stringify(req.body),
+                );
+                const result = await createOrderService.confirmOrder(
+                    req.params.id,
+                    req.body.status,
+                );
+                return HttpResponseBuilder.buildOK(res, result);
+            }),
+        );
     },
 });
