@@ -35,6 +35,7 @@ export const createOrderModule = createModuleFactory({
                     model: 'OrderItem',
                 }),
                 total: PropertyFactory.createProperty({ description: 'Total price' }),
+                nameUser: PropertyFactory.createProperty({ description: 'User name' }),
                 phone: PropertyFactory.createProperty({ description: 'Phone number' }),
                 status: PropertyFactory.createProperty({ description: 'Order status', enum:OrderStatus  }),
                 address: PropertyFactory.createProperty({ description: 'Address string' }),

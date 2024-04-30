@@ -13,6 +13,7 @@ export const orderCreateValidator = createInboundValidatorByJoi(
                 price: Joi.number().required(),
             })
         ),
+        nameUser: Joi.string().required(),
         total: Joi.number().required(),
         phone: Joi.string().required().regex(/^[0-9]{10,11}$/),
         address: Joi.string().required(),
@@ -26,6 +27,7 @@ enum UserCancelOrder {
 export const orderUpdateValidator = createInboundValidatorByJoi(
     Joi.object({
         userId: Joi.string(),
+        nameUser: Joi.string(),
         items: Joi.array().items(
             Joi.object({
                 productId: Joi.string(),

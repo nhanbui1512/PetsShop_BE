@@ -36,6 +36,7 @@ class BreedService {
                 page: productQuery.page || 1,
                 limit: productQuery.limit || 10,
                 sort: sortOptions,
+                select: '-htmlDomDescription',
                 populate: [
                     {
                         path: 'diet',
