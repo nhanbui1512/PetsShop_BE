@@ -18,6 +18,7 @@ export interface IOrder extends Document, SoftDeleteDocument {
     userId: Object;
     items: Object[];
     total: number;
+    nameUser: string;
     status: OrderStatus;
     phone: string;
     address: Object;
@@ -66,6 +67,7 @@ export const OrderSchema = new Schema<IOrder>(
             },
         ],
         total: { type: Number, required: true },
+        nameUser: { type: String, required: true },
         phone: { type: String, required: true },
         status: {
             type: String,
@@ -84,29 +86,6 @@ OrderSchema.plugin(MongooseDelete, {
 OrderSchema.plugin(paginate);
 // index phone and status 
 OrderSchema.index({ phone: 'text', status: 'text' });
-OrderSchema.post('findOneAndUpdate', async function(doc) {
-    try {
-        const order = await OrderModel.findById(doc._id).select('status items').populate({
-            path: 'items.productId',
-            select: 'variantOptions',
-        }); // Chỉ lấy trạng thái và các sản phẩm trong đơn hàng, và chỉ populate các variant options của sản phẩm
 
-        if (order.status === OrderStatus.CONFIRMED) {
-            const promises = []; // Sử dụng mảng promises để chờ tất cả các lời hứa được thực hiện trước khi tiếp tục
-            for (const item of order.items) {
-                for (const variantOption of item.productId.variantOptions) {
-                    const orderVariantOption = item.variantOptions.find(v => v.toString() === variantOption._id.toString());
-                    if (orderVariantOption) {
-                        variantOption.quantity -= orderVariantOption.quantity;
-                    }
-                }
-                promises.push(item.productId.save()); // Thêm lời hứa vào mảng promises
-            }
-            await Promise.all(promises); // Chờ tất cả các lời hứa trong mảng promises được thực hiện
-        }
-    } catch (error) {
-        console.error('Error updating variant options quantity:', error);
-    }
-});
 export const OrderModel:SoftDeleteModel = model<IOrder>('order', OrderSchema);
 

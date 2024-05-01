@@ -36,6 +36,7 @@ class OrderService {
                 userId: data.userId || null,
                 items: orderItemsIds,
                 total: data.total,
+                nameUser: data.nameUser,
                 phone: data.phone,
                 status: data.status,
                 address: data.address,
@@ -55,6 +56,7 @@ class OrderService {
                     path: 'items',
                     populate: {
                         path: 'productId variantOptions',
+                        select: '-variantOptions'
                     },
                 })
                 .lean()
@@ -88,6 +90,7 @@ class OrderService {
                         path: 'items',
                         populate: {
                             path: 'productId variantOptions',
+                            select: 'productImage name description name value price quantity',
                         },
                     },
                 ],
@@ -119,13 +122,42 @@ class OrderService {
     }
     async confirmOrder(id: string, status: string) {
         try {
-            return await OrderModel.findByIdAndUpdate(id, { status
+            const order = await OrderModel.findOneAndUpdate(
+                { _id: id },
+                { status: status },
+                { new: true }
+            ).populate({
+                path: 'items',
+                populate: {
+                    path: 'productId variantOptions',
+                    select: '-variantOptions -htmlDomDescription'
+                },
+            });
+            
+            if (!order) {
+                throw new Error('Order not found.');
             }
-            );
+            const updateVariantOptions = []
+            if( status === 'CONFIRMED'){
+                for (let item of order.items) {
+                    for (let variantOption of item.variantOptions) {
+                        const variantOptionData = await VariantOptionsModel.findById(variantOption._id);
+                        if (!variantOptionData) {
+                            throw new Error('Variant option not found.');
+                        }
+                        variantOptionData.quantity -= item.quantity;
+                        updateVariantOptions.push(variantOptionData.save());
+                    }
+                }
+            }
+            await Promise.all(updateVariantOptions);
+            return order;
         } catch (error) {
+            console.error('Error confirming order:', error);
             throw error;
         }
     }
+    
     
 
 }
