@@ -50,6 +50,9 @@ export const createOrderModule = createModuleFactory({
                 total: PropertyFactory.createProperty({
                     description: 'Total price',
                 }),
+                nameUser: PropertyFactory.createProperty({
+                    description: 'User name',
+                }),
                 phone: PropertyFactory.createProperty({
                     description: 'Phone number',
                 }),
