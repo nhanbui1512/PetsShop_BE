@@ -85,7 +85,7 @@ OrderSchema.plugin(MongooseDelete, {
 });
 OrderSchema.plugin(paginate);
 // index phone and status 
-OrderSchema.index({ phone: 'text', status: 'text' });
+OrderSchema.index({ phone: 'text', status: 'text', nameUser: 'text'});
 
 export const OrderModel:SoftDeleteModel = model<IOrder>('order', OrderSchema);
 
