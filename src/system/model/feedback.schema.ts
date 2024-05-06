@@ -4,6 +4,7 @@ export interface IFeedback extends Document {
     _id: Object;
     userId: Object;
     feedback: string;
+    links: string;
     feedbackNumber: number;
     cardBreedsId: Object;
     createdAt?: Date;
@@ -14,6 +15,7 @@ export const FeedbackSchema = new Schema<IFeedback>(
     {
         userId: { type: Schema.Types.ObjectId, ref: 'user' },
         feedback: { type: String, required: true },
+        links: { type: String, required: true },
         feedbackNumber: { type: Number, required: true },
         cardBreedsId: { type: Schema.Types.ObjectId, ref: 'cardBreeds' },
     },
