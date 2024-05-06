@@ -90,6 +90,13 @@ export const createOrderModule = createModuleFactory({
                     description: 'Sort query',
                     required: false,
                 }),
+                PropertyFactory.createParam({
+                    name: 'nameUser',
+                    paramsIn: 'query',
+                    type: 'string?',
+                    description: 'User name',
+                    required: false,
+                }),
             ],
         })
         router.get('/', createHandler(async (req, res) => {
