@@ -12,21 +12,22 @@ export interface IConversation extends Document {
 export interface IMessage extends Document {
     _id: Object;
     senderId: Object;
-    message: string;
+    message: String;
+    isAdmin: Boolean;
     createdAt?: Date;
     updatedAt?: Date;
 }
 
 export const MessageSchema = new Schema<IMessage>(
     {
-        senderId: { type: Schema.Types.ObjectId, ref: 'user' },
+        senderId: { type: String},
+        isAdmin: { type: Boolean, required: true},
         message: { type: String, required: true },
     },
     { collection: 'message', timestamps: true },
 );
 export const ConversationSchema = new Schema<IConversation>(
     {
-        users: { type: Schema.Types.ObjectId, ref: 'user' },
         adminId: { type: Schema.Types.ObjectId, ref: 'user' },
         messages: [
             {
