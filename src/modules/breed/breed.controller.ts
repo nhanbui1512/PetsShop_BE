@@ -73,7 +73,6 @@ export const createBreedModule = createModuleFactory({
             // identityGuard,
             // breedCreateValidator,
             createHandler(async (req, res) => {
-                logger.info('Create breed: ' + JSON.stringify(req.body));
                 const breed = await createBreedService.createBreed(req.body);
                 return HttpResponseBuilder.buildOK(res, breed);
             }),

@@ -80,7 +80,10 @@ class OrderService {
             } else {
                 sortOptions = { createdAt: -1 };
             }
-    
+            if (orderQuery.nameUser) {
+                // query like nameUser
+                query.nameUser = { $regex: orderQuery.nameUser };
+            }
             const options = {
                 page: orderQuery.page || 1,
                 limit: orderQuery.limit || 10,
