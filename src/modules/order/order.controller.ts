@@ -47,10 +47,12 @@ export const createOrderModule = createModuleFactory({
             tags: [MODULE_NAME],
             method: 'post',
             body:CREATE_ORDER_DTO,
+            security: true,
         })
         
         router.post('/',
         orderCreateValidator,
+        identityGuard,
         createHandler(async (req, res) => {
             const order = await createOrderService.createOrder(req.body);
             return HttpResponseBuilder.buildOK(res, order);
@@ -145,8 +147,10 @@ export const createOrderModule = createModuleFactory({
                 }),
             ],
             body:'UpdateOrderDto',
+            security: true,
         })
         router.patch('/:id', 
+        identityGuard,
         createHandler(async (req, res) => {
             const order = await createOrderService.updateOrder(req.params.id, req.body);
             return HttpResponseBuilder.buildOK(res, order);
@@ -166,8 +170,11 @@ export const createOrderModule = createModuleFactory({
                     required: true,
                 }),
             ],
+            security: true,
         })
-        router.delete('/:id', createHandler(async (req, res) => {
+        router.delete('/:id',
+        identityGuard,
+        createHandler(async (req, res) => {
             await createOrderService.deleteOrder(req.params.id);
             return HttpResponseBuilder.buildNoContent(res);
         }));

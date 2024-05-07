@@ -8,6 +8,7 @@ import { createVariantModule } from './variant';
 import { createBreedModule } from './breed';
 import { createOrderModule } from './order';
 import { createConversationModule } from './convo/conversation.controller';
+import { createFeedBackModule } from './feedback';
 export const createRootModule = createModuleFactory({
     path: '/api',
     name: 'Root',
@@ -21,5 +22,6 @@ export const createRootModule = createModuleFactory({
         createBreedModule(router);
         createOrderModule(router);
         createConversationModule(router);
+        createFeedBackModule(router);
     },
 });

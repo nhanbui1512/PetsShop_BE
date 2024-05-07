@@ -4,7 +4,9 @@ class ConversationService {
         return await ConversationModel.find();
     }
     async createConversation(){
-        return await ConversationModel.create({});
+        return await ConversationModel.create({
+            adminId: '661e9411cb24de23d8809156',
+        });
     }
     async getConversationById(id) {
         return await ConversationModel.findById(id)
