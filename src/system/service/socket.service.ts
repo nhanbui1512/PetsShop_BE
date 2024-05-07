@@ -44,6 +44,7 @@ export const initSocket = httpServer => {
                     io.emit('newChat', { socketId: socket.id, message: data });
                 } else {
                     isExist.messages.push(newMessage);
+                    isExist.updatedAt = new Date();
                     await isExist.save();
                 }
 
