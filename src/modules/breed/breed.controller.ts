@@ -67,10 +67,11 @@ export const createBreedModule = createModuleFactory({
             tags: [MODULE_NAME],
             method: 'post',
             body: 'BreedCreateDTO',
+            security: true,
         });
         router.post(
             '/',
-            // identityGuard,
+            identityGuard,
             // breedCreateValidator,
             createHandler(async (req, res) => {
                 const breed = await createBreedService.createBreed(req.body);
@@ -200,6 +201,7 @@ export const createBreedModule = createModuleFactory({
                     required: true,
                 }),
             ],
+            security: true,
             body: updateBreedDTO,
         });
 
@@ -230,6 +232,7 @@ export const createBreedModule = createModuleFactory({
                     required: true,
                 }),
             ],
+            security: true,
         });
         router.delete(
             '/:id',
@@ -237,6 +240,32 @@ export const createBreedModule = createModuleFactory({
             createHandler(async (req, res) => {
                 await createBreedService.deleteBreed(req.params.id);
                 return HttpResponseBuilder.buildOK(res, {});
+            }),
+        );
+        swaggerBuilder.addRoute({
+            description: 'Get feedback by breed id',
+            route: '/breeds/{id}/feedbacks',
+            tags: [MODULE_NAME],
+            method: 'get',
+            params: [
+                PropertyFactory.createParam({
+                    name: 'id',
+                    paramsIn: 'path',
+                    type: 'string',
+                    description: 'Breed id',
+                    required: true,
+                }),
+            ],
+            security: true,
+        });
+        router.get(
+            '/:id/feedbacks',
+            identityGuard,
+            createHandler(async (req, res) => {
+                const feedback = await createBreedService.getFeedbackByBreedId(
+                    req.params.id,
+                );
+                return HttpResponseBuilder.buildOK(res, feedback);
             }),
         );
     },
