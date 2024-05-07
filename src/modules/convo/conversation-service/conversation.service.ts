@@ -3,9 +3,10 @@ class ConversationService {
     async getAllConversations(){
         return await ConversationModel.find();
     }
-    async createConversation(){
+    async createConversation(data){
         return await ConversationModel.create({
             adminId: '661e9411cb24de23d8809156',
+            socketId: data.socketId,
         });
     }
     async getConversationById(id) {

@@ -28,16 +28,28 @@ export const createConversationModule = createModuleFactory({
             return HttpResponseBuilder.buildOK(res, conversations);
             }),
         );
+        const createConversationDTO = 'CreateConversationDTO';
+        swaggerBuilder.addModel({
+            name: createConversationDTO,
+            properties: {
+                socketId: PropertyFactory.createProperty({
+                    type: 'string',
+                    description: 'Messages',
+                }),
+            },
+        });
         swaggerBuilder.addRoute({
             description: 'create a conversation',
             route: '/conversations',
             tags: [MODULE_NAME],
             method: 'post',
+            body: 'CreateConversationDTO',
         });
+
         router.post(
             '/',
             createHandler(async (req, res) => {
-            const conversation = await conversationService.createConversation();
+            const conversation = await conversationService.createConversation(req.body);
             return HttpResponseBuilder.buildOK(res, conversation);
             }),
         );
