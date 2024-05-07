@@ -1,20 +1,19 @@
-import { ConversationModel, MessageModel } from "../../../system";
+import { ConversationModel, MessageModel } from '../../../system';
 class ConversationService {
-    async getAllConversations(){
+    async getAllConversations() {
         return await ConversationModel.find();
     }
-    async createConversation(data){
+    async createConversation(data) {
         return await ConversationModel.create({
             adminId: '661e9411cb24de23d8809156',
             socketId: data.socketId,
         });
     }
     async getConversationById(id) {
-        return await ConversationModel.findById(id)
-            .populate({
-                path: 'messages',
-                options: { sort: { createdAt: -1 } } // Sắp xếp theo trường createdAt (tăng dần)
-            });
+        return await ConversationModel.findById(id).populate({
+            path: 'messages',
+            options: { sort: { createdAt: -1 } }, // Sắp xếp theo trường createdAt (tăng dần)
+        });
     }
     async deleteConversation(id) {
         return await ConversationModel.findByIdAndDelete(id);
@@ -24,26 +23,25 @@ class ConversationService {
         if (!conversation) {
             throw new Error('Conversation not found');
         }
-    
+
         // Create a new message document using the MessageModel
         const newMessage = new MessageModel({
             senderId: message.senderId,
             isAdmin: message.isAdmin,
             message: message.message,
         });
-    
+
         // Save the new message document to the database
         await newMessage.save();
-    
+
         // Push the new message's ObjectId to the conversation's messages array
         conversation.messages.push(newMessage);
         conversation.lastMessage = message.message;
-    
+
         // Save the updated conversation back to the database
         await conversation.save();
-    
+
         return conversation;
     }
-    
 }
 export const conversationService = new ConversationService();

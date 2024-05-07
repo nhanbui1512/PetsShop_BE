@@ -23,9 +23,34 @@ export const initSocket = httpServer => {
         });
 
         socket.on('user message to server', async data => {
+            // console.log(`${socket.id}: ${data}`);
             try {
-                console.log(`${socket.id} : ${data}`);
-                io.emit('user message to admin', data);
+                // kiểm tra trong database có tồn tại socket id hay chưa
+                const newMessage = await MessageModel.create({
+                    senderId: socket.id,
+                    isAdmin: false,
+                    message: data,
+                });
+
+                const isExist = await ConversationModel.findOne({
+                    socketId: socket.id,
+                });
+
+                if (isExist === null) {
+                    const newConv = await ConversationModel.create({
+                        socketId: socket.id,
+                        messages: [newMessage._id],
+                    });
+                    io.emit('newChat', { socketId: socket.id, message: data });
+                } else {
+                    isExist.messages.push(newMessage);
+                    await isExist.save();
+                }
+
+                io.emit('user message to admin', {
+                    socketId: socket.id,
+                    message: data,
+                });
             } catch (error) {
                 console.error('Error handling chat message:', error);
             }
@@ -33,8 +58,8 @@ export const initSocket = httpServer => {
 
         socket.on('admin message to server', async data => {
             try {
-                const { user, message } = data;
-                io.emit('admin message to user', data);
+                const { socketId, message } = data;
+                io.to(data.socketId).emit('admin message to user', data);
             } catch (error) {
                 console.error('Error handling chat message:', error);
             }
