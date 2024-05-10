@@ -1,7 +1,32 @@
 import { ConversationModel, MessageModel } from '../../../system';
 class ConversationService {
-    async getAllConversations() {
-        return await ConversationModel.find();
+    async getAllConversations(query) {
+        try {
+            if (query.socketId ) {
+                console.log(query);
+                const conversations = await ConversationModel.find({ socketId: query.socketId }).populate({
+                    path: 'messages',
+                    options: { sort: { createdAt: -1 } }, // Sắp xếp theo trường createdAt (tăng dần)
+                });
+                // assign last message in conversations
+                conversations.map((con) => {
+                    con.lastMessage = con.messages[0].message;
+                });
+                return conversations;
+            } else {
+                const conversations =  await ConversationModel.find({}).populate({
+                    path: 'messages',
+                    options: { sort: { createdAt: -1 } }, // Sắp xếp theo trường createdAt (tăng dần)
+                });
+                // assign last message in conversations
+                conversations.map((con) => {
+                    con.lastMessage = con.messages[0].message;
+                });
+                return conversations;
+            }
+        } catch (error) {
+            
+        }
     }
     async createConversation(data) {
         return await ConversationModel.create({
