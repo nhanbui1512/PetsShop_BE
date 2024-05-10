@@ -6,6 +6,7 @@ import {
     CardBreedModel,
     VariantOptionsModel,
     IVariantOptions,
+    FeedbackModel,
 } from '../../../system/model';
 import { logger } from '../../../system/logging/logger';
 import { stringify } from 'querystring';
@@ -101,6 +102,17 @@ class BreedService {
         try {
             const newBreed = await CardBreedModel.create(breed);
             return newBreed;
+        } catch (error) {
+            throw error;
+        }
+    }
+    async getFeedbackByBreedId(id: string) {
+        try {
+            const breed = await FeedbackModel.find({cardBreedsId: id});
+            if (!breed) {
+                throw new Error('Breed not found');
+            }
+            return breed;
         } catch (error) {
             throw error;
         }
