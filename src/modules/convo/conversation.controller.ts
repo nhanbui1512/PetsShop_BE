@@ -18,13 +18,22 @@ export const createConversationModule = createModuleFactory({
       swaggerBuilder.addRoute({
         description: 'Get all conversations',
         route: '/conversations',
+        params: [
+            PropertyFactory.createParam({
+                name: 'socketId',
+                paramsIn: 'query',
+                type: 'string?',
+                description: 'Number of items per page (limit)',
+                required: false,
+            }),
+        ],
         tags: [MODULE_NAME],
         method: 'get',
       });
         router.get(
             '/',
             createHandler(async (req, res) => {
-            const conversations = await conversationService.getAllConversations();
+            const conversations = await conversationService.getAllConversations(req.query);
             return HttpResponseBuilder.buildOK(res, conversations);
             }),
         );
