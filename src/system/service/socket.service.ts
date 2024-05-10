@@ -60,6 +60,20 @@ export const initSocket = httpServer => {
         socket.on('admin message to server', async data => {
             try {
                 const { socketId, message } = data;
+
+                const newMessage = await MessageModel.create({
+                    senderId: socket.id,
+                    isAdmin: true,
+                    message: message,
+                });
+
+                const convesation = await ConversationModel.findOne({
+                    socketId: socketId,
+                });
+                if (convesation !== null) convesation.messages.push(newMessage);
+                convesation.updatedAt = new Date();
+                await convesation.save();
+
                 io.to(data.socketId).emit('admin message to user', data);
             } catch (error) {
                 console.error('Error handling chat message:', error);

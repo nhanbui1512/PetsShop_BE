@@ -5,7 +5,7 @@ import { createHandler } from '../../system/factories';
 import { HttpResponseBuilder } from '../../system/builders/http-response.builder';
 import { identityGuard } from '../auth/auth-service/service';
 import { logger } from '../../system/logging/logger';
-import { ICategory } from '../../system/model';
+import { ConversationModel, ICategory } from '../../system/model';
 import { conversationService } from './conversation-service';
 import { describe } from 'node:test';
 const MODULE_NAME = 'Conversation';
@@ -14,27 +14,28 @@ export const createConversationModule = createModuleFactory({
     path: '/conversations',
     name: MODULE_NAME,
     bundler: router => {
-      swaggerBuilder.addTag(MODULE_NAME);
-      swaggerBuilder.addRoute({
-        description: 'Get all conversations',
-        route: '/conversations',
-        params: [
-            PropertyFactory.createParam({
-                name: 'socketId',
-                paramsIn: 'query',
-                type: 'string?',
-                description: 'Number of items per page (limit)',
-                required: false,
-            }),
-        ],
-        tags: [MODULE_NAME],
-        method: 'get',
-      });
+        swaggerBuilder.addTag(MODULE_NAME);
+        swaggerBuilder.addRoute({
+            description: 'Get all conversations',
+            route: '/conversations',
+            params: [
+                PropertyFactory.createParam({
+                    name: 'socketId',
+                    paramsIn: 'query',
+                    type: 'string?',
+                    description: 'Number of items per page (limit)',
+                    required: false,
+                }),
+            ],
+            tags: [MODULE_NAME],
+            method: 'get',
+        });
         router.get(
             '/',
             createHandler(async (req, res) => {
-            const conversations = await conversationService.getAllConversations(req.query);
-            return HttpResponseBuilder.buildOK(res, conversations);
+                const conversations =
+                    await conversationService.getAllConversations(req.query);
+                return HttpResponseBuilder.buildOK(res, conversations);
             }),
         );
         const createConversationDTO = 'CreateConversationDTO';
@@ -58,8 +59,9 @@ export const createConversationModule = createModuleFactory({
         router.post(
             '/',
             createHandler(async (req, res) => {
-            const conversation = await conversationService.createConversation(req.body);
-            return HttpResponseBuilder.buildOK(res, conversation);
+                const conversation =
+                    await conversationService.createConversation(req.body);
+                return HttpResponseBuilder.buildOK(res, conversation);
             }),
         );
         // get by id
@@ -75,17 +77,29 @@ export const createConversationModule = createModuleFactory({
                     type: 'string',
                     description: 'Order id',
                     required: true,
-                })
+                }),
             ],
         });
         router.get(
             '/:id',
             createHandler(async (req, res) => {
-            const conversation = await conversationService.getConversationById(req.params.id);
-            return HttpResponseBuilder.buildOK(res, conversation);
+                // const conversation =
+                //     await conversationService.getConversationById(
+                //         req.params.id,
+                //     );
+                const socketId = req.params.id;
+
+                const conversations = await ConversationModel.findOne({
+                    socketId: socketId,
+                }).populate({
+                    path: 'messages',
+                    options: { sort: { createdAt: -1 } }, // Sắp xếp theo trường createdAt (tăng dần)
+                });
+
+                return HttpResponseBuilder.buildOK(res, conversations);
             }),
         );
-        // delete 
+        // delete
         swaggerBuilder.addRoute({
             description: 'Delete conversation by id',
             route: '/conversations/{id}',
@@ -96,14 +110,15 @@ export const createConversationModule = createModuleFactory({
                     name: 'id',
                     type: 'string',
                     required: true,
-                })
+                }),
             ],
         });
         router.delete(
             '/:id',
             createHandler(async (req, res) => {
-            const conversation = await conversationService.deleteConversation(req.params.id);
-            return HttpResponseBuilder.buildOK(res, conversation);
+                const conversation =
+                    await conversationService.deleteConversation(req.params.id);
+                return HttpResponseBuilder.buildOK(res, conversation);
             }),
         );
         // create message
@@ -144,8 +159,11 @@ export const createConversationModule = createModuleFactory({
         router.post(
             '/:id/messages',
             createHandler(async (req, res) => {
-            const conversation = await conversationService.createMessage(req.params.id, req.body);
-            return HttpResponseBuilder.buildOK(res, conversation);
+                const conversation = await conversationService.createMessage(
+                    req.params.id,
+                    req.body,
+                );
+                return HttpResponseBuilder.buildOK(res, conversation);
             }),
         );
     },
