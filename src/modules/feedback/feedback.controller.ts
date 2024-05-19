@@ -6,7 +6,7 @@ import { HttpResponseBuilder } from '../../system/builders/http-response.builder
 import { identityGuard } from '../auth/auth-service/service';
 import { logger } from '../../system/logging/logger';
 import { ICategory } from '../../system/model';
-import { feedBackService } from './feedbacl-service'
+import { feedBackService } from './feedbacl-service';
 import { describe } from 'node:test';
 const MODULE_NAME = 'Feedback';
 
@@ -52,7 +52,6 @@ export const createFeedBackModule = createModuleFactory({
                     type: 'string',
                     description: 'Card breeds id',
                 }),
-
             },
         });
         swaggerBuilder.addRoute({
@@ -63,7 +62,7 @@ export const createFeedBackModule = createModuleFactory({
             body: createFeedbackDTO,
             security: true,
         });
-        
+
         router.post(
             '/',
             identityGuard,
@@ -73,7 +72,7 @@ export const createFeedBackModule = createModuleFactory({
             }),
         );
 
-        // get by id 
+        // get by id
         swaggerBuilder.addRoute({
             description: 'Get feedback by id',
             route: '/feedbacks/{id}',
@@ -86,14 +85,16 @@ export const createFeedBackModule = createModuleFactory({
                     type: 'string',
                     description: 'Feedback id',
                     required: true,
-                })
+                }),
             ],
         });
 
         router.get(
             '/:id',
             createHandler(async (req, res) => {
-                const feedback = await feedBackService.getFeedbackById(req.params.id);
+                const feedback = await feedBackService.getFeedbackById(
+                    req.params.id,
+                );
                 return HttpResponseBuilder.buildOK(res, feedback);
             }),
         );
@@ -108,7 +109,7 @@ export const createFeedBackModule = createModuleFactory({
                     name: 'id',
                     type: 'string',
                     required: true,
-                })
+                }),
             ],
             security: true,
         });
@@ -117,7 +118,9 @@ export const createFeedBackModule = createModuleFactory({
             identityGuard,
             createHandler(async (req, res) => {
                 await feedBackService.deleteFeedback(req.params.id);
-                return HttpResponseBuilder.buildOK(res, { message: 'Delete feedback successfully' });
+                return HttpResponseBuilder.buildOK(res, {
+                    message: 'Delete feedback successfully',
+                });
             }),
         );
     },

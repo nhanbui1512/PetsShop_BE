@@ -17,7 +17,7 @@ export const FeedbackSchema = new Schema<IFeedback>(
         feedback: { type: String, required: true },
         links: { type: String, required: true },
         feedbackNumber: { type: Number, required: true },
-        cardBreedsId: { type: Schema.Types.ObjectId, ref: 'cardBreeds' },
+        cardBreedsId: { type: Schema.Types.ObjectId, ref: 'cardBreed' },
     },
     { collection: 'feedback', timestamps: true },
 );
