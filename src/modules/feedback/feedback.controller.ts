@@ -65,7 +65,6 @@ export const createFeedBackModule = createModuleFactory({
 
         router.post(
             '/',
-            identityGuard,
             createHandler(async (req, res) => {
                 const feedback = await feedBackService.createFeedback(req.body);
                 return HttpResponseBuilder.buildOK(res, feedback);

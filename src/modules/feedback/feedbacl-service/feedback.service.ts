@@ -10,7 +10,6 @@ class FeedBackService {
     async createFeedback(body) {
         try {
             return await FeedbackModel.create({
-                userId: body.userId,
                 feedback: body.feedback,
                 links: body.links,
                 feedbackNumber: body.feedbackNumber,
