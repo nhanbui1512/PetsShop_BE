@@ -77,7 +77,6 @@ export const createOrderModule = createModuleFactory({
         router.post(
             '/',
             orderCreateValidator,
-            identityGuard,
             createHandler(async (req, res) => {
                 const order = await createOrderService.createOrder(req.body);
                 return HttpResponseBuilder.buildOK(res, order);
