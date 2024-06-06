@@ -77,7 +77,6 @@ class BreedService {
                 const find = result.find(item => item._id == breed.id);
                 breed = breed.toObject();
                 breed.feedbackCount = find.feedbackCount;
-                console.log(breed);
                 return breed;
             });
 
