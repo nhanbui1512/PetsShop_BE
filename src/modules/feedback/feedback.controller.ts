@@ -130,5 +130,33 @@ export const createFeedBackModule = createModuleFactory({
                 });
             }),
         );
+
+        router.delete(
+            '/',
+            // identityGuard,
+            createHandler(async (req, res) => {
+                const ids = req.body.ids;
+
+                if (!Array.isArray(ids))
+                    return res
+                        .status(422)
+                        .json({ message: 'ids must be array' });
+                if (ids.length === 0)
+                    return res
+                        .status(422)
+                        .json({ message: 'ids cannot be a empty array' });
+
+                try {
+                    const result = await FeedbackModel.deleteMany({
+                        _id: { $in: ids },
+                    });
+                    return res
+                        .status(200)
+                        .json({ status: 'Success', data: result });
+                } catch (error) {
+                    return res.status(500).json({ message: error.message });
+                }
+            }),
+        );
     },
 });
