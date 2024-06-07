@@ -5,7 +5,7 @@ import { createHandler } from '../../system/factories';
 import { HttpResponseBuilder } from '../../system/builders/http-response.builder';
 import { identityGuard } from '../auth/auth-service/service';
 import { logger } from '../../system/logging/logger';
-import { ICategory } from '../../system/model';
+import { FeedbackModel, ICategory } from '../../system/model';
 import { feedBackService } from './feedbacl-service';
 import { describe } from 'node:test';
 const MODULE_NAME = 'Feedback';
@@ -91,6 +91,18 @@ export const createFeedBackModule = createModuleFactory({
         router.get(
             '/:id',
             createHandler(async (req, res) => {
+                const breedId = req.query.breed_id;
+
+                if (breedId) {
+                    const feedbacks = await FeedbackModel.find({
+                        cardBreedsId: breedId,
+                    }).populate({
+                        path: 'cardBreedsId',
+                        select: '-htmlDomDescription',
+                    });
+                    return res.status(200).json({ data: feedbacks });
+                }
+
                 const feedback = await feedBackService.getFeedbackById(
                     req.params.id,
                 );
