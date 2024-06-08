@@ -8,7 +8,6 @@ import { notFoundHandler } from './system/exceptions/error-handler/';
 import { swaggerBuilder } from './system/swagger';
 import { logger } from './system/logging/logger';
 import { initSocket } from './system/service/socket.service';
-// import { authenticationRouter } from './system/middleware/';
 import http from 'http';
 const app = express();
 const port = process.env.PORT || 3000;
@@ -26,8 +25,8 @@ app.get('/', (req, res) => {
             optionsSuccessStatus: 200,
         }),
     );
-    app.use(express.json());
-    app.use(express.urlencoded({ limit: '10mb', extended: false }));
+    app.use(express.json({ limit: '50mb' }));
+    app.use(express.urlencoded({ limit: '50mb', extended: false }));
     // app.use(authenticationRouter);
     createRootModule(app);
     app.use(swaggerUi.serveWithOptions({ redirect: false }));
