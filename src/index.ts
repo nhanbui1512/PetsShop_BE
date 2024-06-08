@@ -27,7 +27,7 @@ app.get('/', (req, res) => {
         }),
     );
     app.use(express.json());
-    app.use(express.urlencoded({ extended: false }));
+    app.use(express.urlencoded({ limit: '10mb', extended: false }));
     // app.use(authenticationRouter);
     createRootModule(app);
     app.use(swaggerUi.serveWithOptions({ redirect: false }));
