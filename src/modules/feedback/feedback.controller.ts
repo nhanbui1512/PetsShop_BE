@@ -133,7 +133,7 @@ export const createFeedBackModule = createModuleFactory({
 
         router.delete(
             '/',
-            // identityGuard,
+            identityGuard,
             createHandler(async (req, res) => {
                 const ids = req.body.ids;
 

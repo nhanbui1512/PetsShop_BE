@@ -11,7 +11,7 @@ import { initSocket } from './system/service/socket.service';
 // import { authenticationRouter } from './system/middleware/';
 import http from 'http';
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 const portSocket = 3001;
 app.get('/', (req, res) => {
     res.json({
@@ -46,5 +46,4 @@ server.listen(portSocket, () => {
 app.listen(port, () => {
     logger.info(`Example app listening at http://localhost:${port}`);
     logger.info(`Swagger at http://localhost:${port}/docs`);
-}
-);
+});
