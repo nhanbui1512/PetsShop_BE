@@ -132,6 +132,7 @@ export const createUserModule = createModuleFactory({
             '/:id',
             identityGuard,
             createHandler(async (req, res) => {
+                console.log("vao day");
                 logger.info(req.params.id);
                 const user = await createUserService.updateUser(
                     req.params.id,

@@ -47,7 +47,6 @@ class UserService {
         try {
             const user = await UserModel.findById(id)
                 .lean()
-                .populate('addresses');
 
             return omit(user, 'password');
         } catch (error) {
@@ -72,7 +71,7 @@ class UserService {
                 {
                     new: true,
                 },
-            ).populate('addresses');
+            )
             return updatedUser;
         } catch (error) {
             throw error;
